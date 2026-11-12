@@ -53,7 +53,7 @@ jobs:
       CARGO_INCREMENTAL: '0'
       DEVTOOLS_PLATFORM: ${{ matrix.platform }}
       DEVTOOLS_TARGET: ${{ matrix.target }}
-      DEVTOOLS_OUTPUT: ${{ runner.temp }}/devtools-output
+      DEVTOOLS_OUTPUT: ${{ github.workspace }}/.build/distributions
       CARGO_TARGET_DIR: ${{ github.workspace }}/.build/${{ matrix.target }}
     steps:
       - name: Check out source
