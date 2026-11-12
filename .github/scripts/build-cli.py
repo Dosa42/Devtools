@@ -68,6 +68,7 @@ def main():
     identities = {name: executable_identity(binaries / name, target) for name in PROJECTS}
     environment = dict(os.environ, PATH=str(binaries) + os.pathsep + os.environ['PATH'])
     environment['DEVTOOLS_WATCH_TEST_PROOF'] = str(binaries / 'devtool-proof')
+    environment['TMPDIR'] = str(Path(tempfile.gettempdir()).resolve())
     for project in PROJECTS:
         run(['cargo', 'test', '--release', '--locked', '--target', target[0], '--manifest-path', str(ROOT / project / 'Cargo.toml')], env=environment)
     with tempfile.TemporaryDirectory(prefix='devtools-assemble-') as temporary:
