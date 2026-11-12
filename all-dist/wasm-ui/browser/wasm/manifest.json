@@ -1,0 +1,137 @@
+{
+  "schema": "devtools.wasm-ui/1",
+  "version": "0.1.0",
+  "target": "wasm32-unknown-unknown",
+  "rustc": "rustc 1.102.0-nightly (ee8268e23 2026-11-11) (built from a source tarball)\nbinary: rustc\ncommit-hash: ee8268e23d0e2e308b52e4f63df69afb69bc61a4\ncommit-date: 2026-11-11\nhost: aarch64-unknown-linux-gnu\nrelease: 1.102.0-nightly\nLLVM version: 23.1.5",
+  "wasm_bindgen": "0.2.130",
+  "toolchain_ref": "28ada6e5184e3f2599980321b1ec67084fb742d3",
+  "toolchain_manifests": {
+    "rust": {
+      "component": "rust",
+      "platform": "ubuntu-24.04-arm64",
+      "artifact_id": 13937703010,
+      "artifact_created_at": "2026-11-12T11:11:57Z",
+      "artifact_digest": "sha256:79aa164e697056c510e06169e441380bf97bead7f573579045f8e28bab9dd050",
+      "run_id": 43206784386,
+      "run_url": "https://github.com/Dosa42/Assembler-compiler-lib/actions/runs/43206784386",
+      "source_commit": "6b829d52891963f122bec845342910cbfbc9cbe3",
+      "archive": {
+        "name": "rust-ubuntu-24.04-arm64.tar.xz",
+        "size": 274476340,
+        "sha256": "d54b510cd23de3f2fdb7732d279c6d297f0765c380eaf21bbab70a67042ecfb8"
+      },
+      "files": [
+        {
+          "name": "rust-ubuntu-24.04-arm64.tar.xz.part0001",
+          "size": 99614720,
+          "sha256": "1ac938d775eeafd0e2dea7099e5624e0855fd22caac6ff80552862de7cccee5b"
+        },
+        {
+          "name": "rust-ubuntu-24.04-arm64.tar.xz.part0002",
+          "size": 99614720,
+          "sha256": "0ba560372f30675c83a4a626e195199d9d746a0e3b6832c23929a9f53a7d3b23"
+        },
+        {
+          "name": "rust-ubuntu-24.04-arm64.tar.xz.part0003",
+          "size": 75246900,
+          "sha256": "b4169ab1377324d93ab54dfc43ac98b8e97035af7293434a7c6337f3f34861b2"
+        }
+      ],
+      "stored_at": "2026-11-12T11:13:17.894061+00:00"
+    },
+    "wasm-bindgen": {
+      "component": "wasm-bindgen",
+      "platform": "ubuntu-24.04-arm64",
+      "artifact_id": 13964334503,
+      "artifact_created_at": "2026-11-12T17:05:14Z",
+      "artifact_digest": "sha256:033b033e70f4cc01e1778c0d0d3ee110b1db77f9709a21350b85711e9909d3f3",
+      "run_id": 43265042785,
+      "run_url": "https://github.com/Dosa42/Assembler-compiler-lib/actions/runs/43265042785",
+      "source_commit": "8a7bd94613ed0b14754da1b18ee155a82eaded29",
+      "archive": {
+        "name": "wasm-bindgen-ubuntu-24.04-arm64.tar.xz",
+        "size": 5650356,
+        "sha256": "bb58773b0f48ddcf5fb175f85b5926415def49d72f8285b09225f91cadf6d2fa"
+      },
+      "files": [
+        {
+          "name": "wasm-bindgen-ubuntu-24.04-arm64.tar.xz",
+          "size": 5650356,
+          "sha256": "bb58773b0f48ddcf5fb175f85b5926415def49d72f8285b09225f91cadf6d2fa"
+        }
+      ],
+      "stored_at": "2026-11-12T17:07:25.254050+00:00"
+    },
+    "binaryen": {
+      "component": "binaryen",
+      "platform": "ubuntu-24.04-arm64",
+      "artifact_id": 13925519236,
+      "artifact_created_at": "2026-11-12T08:13:08Z",
+      "artifact_digest": "sha256:43ae2535eec216b12dd7deb63fb3bbd73f1b3f1bed76c905e66074479d03c553",
+      "run_id": 43179370823,
+      "run_url": "https://github.com/Dosa42/Assembler-compiler-lib/actions/runs/43179370823",
+      "source_commit": "24ea2a565e23022343bb4ed7de2a75d4341064b6",
+      "archive": {
+        "name": "binaryen-ubuntu-24.04-arm64.tar.xz",
+        "size": 4682260,
+        "sha256": "f4f510d748ecc71b943062c2eaed090058f4f36026dd79a02855e195204d1b5e"
+      },
+      "files": [
+        {
+          "name": "binaryen-ubuntu-24.04-arm64.tar.xz",
+          "size": 4682260,
+          "sha256": "f4f510d748ecc71b943062c2eaed090058f4f36026dd79a02855e195204d1b5e"
+        }
+      ],
+      "stored_at": "2026-11-12T08:29:08.819152+00:00"
+    },
+    "wasm-tools": {
+      "component": "wasm-tools",
+      "platform": "ubuntu-24.04-arm64",
+      "artifact_id": 13925618032,
+      "artifact_created_at": "2026-11-12T08:03:21Z",
+      "artifact_digest": "sha256:29dfddb77baec5375cf2ef583d2f5927430caafb17d446c31d571d9ffc26c8d8",
+      "run_id": 43179370823,
+      "run_url": "https://github.com/Dosa42/Assembler-compiler-lib/actions/runs/43179370823",
+      "source_commit": "24ea2a565e23022343bb4ed7de2a75d4341064b6",
+      "archive": {
+        "name": "wasm-tools-ubuntu-24.04-arm64.tar.xz",
+        "size": 5062304,
+        "sha256": "d03fa355a35954b99e6ab42c9b12c41a1ce6540a11209cc97392800b23de962d"
+      },
+      "files": [
+        {
+          "name": "wasm-tools-ubuntu-24.04-arm64.tar.xz",
+          "size": 5062304,
+          "sha256": "d03fa355a35954b99e6ab42c9b12c41a1ce6540a11209cc97392800b23de962d"
+        }
+      ],
+      "stored_at": "2026-11-12T08:30:42.059761+00:00"
+    }
+  },
+  "sources": {
+    "demo/app.js": "72f26acd951a95143d4767506d48560cbd85497d07aab019c3a3f064c4721216",
+    "demo/index.html": "6e7119495a6e552d4d0418f1853b28adc45d547a27d4d7ab76645c86bbaa70f8",
+    "demo/style.css": "f963cffe130dfd7aeb557e9c502f5e26eaeddfb9b0e85f4e9fc673fcdc3be3a4",
+    "demo/terminal.js": "55a9d9981259108bf3fb5eabac61a69512d9b69091e96ee15adb4d1a7b1619b6",
+    "ui/Cargo.lock": "0fdcfdbbc7d73816022d315d4c4f8a9a1217d900d4195a66eef38305b8f7f4dc",
+    "ui/Cargo.toml": "88882ac594ed3230897276e8e521c2b6acf58280d225c64b80ae98dcd3fa8bb6",
+    "ui/build.py": "4684eda24c2a5c87f6a6b8dde20f22c8a1ea204b4603b4a67a1d2aed8d3e45e1",
+    "ui/minify.cjs": "84fb7d859e68d01cbb27ed0abf97a3cc83c537fe35f841ca8f918330a0798cbf",
+    "ui/src/app.rs": "aab740a81ca491f6481a6e4abcf2db71ff7c62379fb5fe1338c11684e1970ca2",
+    "ui/src/lib.rs": "67d66510d5bf7a9ed8eec4db3feeafaaaa277191d11f69bb7478a04c53c7fc53",
+    "ui/src/model.rs": "d093bd19e1b441e6b61bd538a4751983e287eeb27f4606a5578c8c783870c316",
+    "ui/src/render.rs": "d219d045c826687acf971dbf6cfb0d1bdef605b2210f09c98ce0716429332f77",
+    "ui/src/shell.html": "771b3c5ed9158e4c3d769caccd6f48745fdb92211d6cb6ee93fefa1cc50d4244"
+  },
+  "files": {
+    "devtools_ui.js": {
+      "sha256": "585fe251e261a4eae5ac4e76aae3c34eafba7c443e08d05b2e525557f98af58a",
+      "bytes": 13282
+    },
+    "devtools_ui_bg.wasm": {
+      "sha256": "669d6cb2f6e504e568d30b387facc0359d4c10ee6a689a35d972b8bf363cace6",
+      "bytes": 197147
+    }
+  }
+}

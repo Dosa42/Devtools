@@ -2,7 +2,7 @@
   "schema": "devtools.bundle/1",
   "platform": "macos-15-arm64",
   "target": "aarch64-apple-darwin",
-  "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+  "source_commit": "f0145b19ae9668a752f94c1d6a947d86b562ed19",
   "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
   "versions": {
     "devtool": "0.5.0",
@@ -33,6 +33,6 @@
     }
   },
   "archive": "devtools-macos-15-arm64.tar.gz",
-  "archive_sha256": "5f751b873d5d8d481d0cecbe62c60a87b24514d9b6dcb00336f27a1a0c5b0636",
+  "archive_sha256": "71abfb6f709e9f759a3cefebc331a979a983914573e67bbd7cad5f30110c37a3",
   "tests": "native Rust integration suites and packaged demo integration suite passed"
 }

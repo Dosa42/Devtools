@@ -2,7 +2,7 @@
   "schema": "devtools.distribution/1",
   "platform": "ubuntu-24.04-x86_64",
   "target": "x86_64-unknown-linux-gnu",
-  "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+  "source_commit": "f0145b19ae9668a752f94c1d6a947d86b562ed19",
   "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
   "executable": "devtool",
   "version": "0.5.0",
@@ -10,5 +10,5 @@
   "architecture": "x86_64",
   "sha256": "82b4cd247b4b609c7eb70c20eb9342246d4c4d2e5d57c8762e1234cb49a30c6f",
   "archive": "devtool-ubuntu-24.04-x86_64.tar.gz",
-  "archive_sha256": "d904d93c0bf923eb70b65bb227afbdb4ffd1a9d7738416d5ee89e45c3e152688"
+  "archive_sha256": "d56ac418e482065ac0ce55c5839e93e27b976787a2501f6cc31e2b544e85554b"
 }

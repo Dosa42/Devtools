@@ -2,7 +2,7 @@
   "schema": "devtools.bundle/1",
   "platform": "ubuntu-24.04-x86_64",
   "target": "x86_64-unknown-linux-gnu",
-  "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+  "source_commit": "f0145b19ae9668a752f94c1d6a947d86b562ed19",
   "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
   "versions": {
     "devtool": "0.5.0",
@@ -33,6 +33,6 @@
     }
   },
   "archive": "devtools-ubuntu-24.04-x86_64.tar.gz",
-  "archive_sha256": "515ec285877d94a3b9b0f5c4c12be86536e811a83e1670840a1318af8a40a026",
+  "archive_sha256": "fc7659bce79ddca03743279634335633d86db57fcdabe67ce8ebfbf600a84254",
   "tests": "native Rust integration suites and packaged demo integration suite passed"
 }
