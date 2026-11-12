@@ -104,8 +104,8 @@ class DemoTests(unittest.TestCase):
         self.command(session, 'devtool -D')
         self.command(session, 'devtool --canonical-tree')
         root = Path(session.snapshot()['last_root'])
-        self.wait_for(lambda: b'sha_present: true' in (root / 'state.txt').read_bytes())
-        expected_state = (root / 'state.txt').read_bytes()
+        expected_state = (ROOT.parent / 'templates/files/state.txt').read_bytes().replace(b'canonical_tree: false', b'canonical_tree: true').replace(b'sha_present: false', b'sha_present: true')
+        self.wait_for(lambda: (root / 'state.txt').read_bytes() == expected_state)
         for format in ['7z', 'tar.gz']:
             self.command(session, f'devtool compress {shlex.quote(str(root))} --format {format} --level 1 -o archief.{format}')
             self.assertTrue((session.work / f'archief.{format}').is_file())
