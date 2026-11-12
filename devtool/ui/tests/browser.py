@@ -62,6 +62,9 @@ async def main():
         await wait("document.querySelector('[data-command=\"devtool -D\"]')?.disabled===false")
         initial = await evaluate("({runtime:document.getElementById('wasm-root').dataset.runtime,engines:document.querySelectorAll('.engine-row').length,session:document.getElementById('session-label').title})")
         assert initial['runtime'] == 'rust-wasm'
+        await evaluate("(()=>{const t=document.querySelector('.xterm-helper-textarea');t.focus();const data=new DataTransfer();data.setData('text/plain',\"printf 'wasm-xterm-input'\");t.dispatchEvent(new ClipboardEvent('paste',{clipboardData:data,bubbles:true,cancelable:true}));t.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',code:'Enter',keyCode:13,which:13,bubbles:true,cancelable:true}));return true})()")
+        await wait("document.getElementById('telemetry-history').textContent.includes('wasm-xterm-input')")
+        await wait("document.querySelector('[data-command=\"devtool -D\"]')?.disabled===false")
         await evaluate("document.querySelector('[data-command=\"devtool -D\"]').click();true")
         await command('')
         await wait("document.getElementById('run-status').textContent==='run-nr.001'")
@@ -124,7 +127,7 @@ async def main():
         assert any(response['mimeType']=='application/wasm' and response['status']==200 for response in network), network
         exceptions = [event for event in events if event.get('method')=='Runtime.exceptionThrown']
         assert not exceptions, exceptions
-        result = {'url':args.url, 'initial':initial, 'state_preview':preview, 'compression':compression, 'layouts':widths, 'wasm_network':network, 'runtime_exceptions':exceptions, 'checks':['Rust/WASM mount','header command through xterm and PTY','canonical tree 17 files','state.txt preview','Bash pipe','four native executable command history','compression quoting','CLI catalog','320/390/720/900/1440 reflow','session reload','interactive configuration menu','offline recovery','reduced motion']}
+        result = {'url':args.url, 'initial':initial, 'state_preview':preview, 'compression':compression, 'layouts':widths, 'wasm_network':network, 'runtime_exceptions':exceptions, 'checks':['Rust/WASM mount','xterm paste and Enter callback','header command through xterm and PTY','canonical tree 17 files','state.txt preview','Bash pipe','four native executable command history','compression quoting','CLI catalog','320/390/720/900/1440 reflow','session reload','interactive configuration menu','offline recovery','reduced motion']}
         (args.evidence/'wasm-browser.json').write_text(json.dumps(result,indent=2)+'\n')
         print(json.dumps({'checks':len(result['checks']),'wasm_responses':len(network),'exceptions':len(exceptions),'session':saved}))
 
