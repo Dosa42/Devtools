@@ -12,7 +12,7 @@
     "demo/style.css": "f963cffe130dfd7aeb557e9c502f5e26eaeddfb9b0e85f4e9fc673fcdc3be3a4",
     "demo/terminal.js": "55a9d9981259108bf3fb5eabac61a69512d9b69091e96ee15adb4d1a7b1619b6",
     "ui/Cargo.lock": "0fdcfdbbc7d73816022d315d4c4f8a9a1217d900d4195a66eef38305b8f7f4dc",
-    "ui/Cargo.toml": "bc1cb2bb0b4c468645d11d7857c1effdbababbd1af050db2f98fb5e7ad488e28",
+    "ui/Cargo.toml": "88882ac594ed3230897276e8e521c2b6acf58280d225c64b80ae98dcd3fa8bb6",
     "ui/build.py": "4684eda24c2a5c87f6a6b8dde20f22c8a1ea204b4603b4a67a1d2aed8d3e45e1",
     "ui/minify.cjs": "84fb7d859e68d01cbb27ed0abf97a3cc83c537fe35f841ca8f918330a0798cbf",
     "ui/src/app.rs": "aab740a81ca491f6481a6e4abcf2db71ff7c62379fb5fe1338c11684e1970ca2",
