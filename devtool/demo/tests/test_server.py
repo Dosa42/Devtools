@@ -42,19 +42,19 @@ class DemoTests(unittest.TestCase):
         with urllib.request.urlopen(request, timeout=20) as response:
             return json.load(response)
 
-    def wait_for(self, predicate):
+    def wait_for(self, predicate, diagnostic=None):
         deadline = time.monotonic() + 12
         while time.monotonic() < deadline:
             if predicate():
                 return
             time.sleep(.025)
-        self.fail('PTY condition did not complete')
+        self.fail('PTY condition did not complete' + (': ' + diagnostic() if diagnostic else ''))
 
     def new_session(self):
         value = self.request('/api/session', {})
         session = self.server.sessions[value['id']]
-        self.wait_for(lambda: session.ready)
         self.addCleanup(session.close)
+        self.wait_for(lambda: session.ready, lambda: base64.b64decode(session.read(0)['data']).decode(errors='replace'))
         return session
 
     def command(self, session, text):

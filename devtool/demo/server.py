@@ -60,6 +60,7 @@ class Session:
             'PROMPT_COMMAND': 'printf "%s" "$PWD" > "$DEMO_CWD_FILE"',
             'PS1': '\\[\x1b]133;A\x07\\]\\[\x1b[38;5;114m\\]devtool\\[\x1b[0m\\] \\[\x1b[38;5;245m\\]\\w\\[\x1b[0m\\]\\n\\$ ',
         })
+        self.environment['DEMO_PS1'] = self.environment['PS1']
         self.environment.pop('DEVTOOLS_WATCH_DAEMON', None)
         self.guard = threading.RLock()
         self.output = bytearray()

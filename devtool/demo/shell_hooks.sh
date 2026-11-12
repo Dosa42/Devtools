@@ -31,5 +31,6 @@ __devtool_prompt() {
 
 HISTCONTROL=
 HISTIGNORE=
+PS1=$DEMO_PS1
 PROMPT_COMMAND=__devtool_prompt
 trap '__devtool_debug' DEBUG
