@@ -1,0 +1,1470 @@
+{
+  "canonical_tree_mode": {
+    "default_target": "latest successfully created main directory",
+    "explicit_path_is": "tree target itself",
+    "flag": "--canonical-tree",
+    "path_flag": "--path",
+    "runner": "embedded shell script executed with sh",
+    "template": {
+      "derived_outputs": [
+        "state.txt"
+      ],
+      "directories": [
+        "docs",
+        "data",
+        "logs",
+        "output"
+      ],
+      "files": [
+        {
+          "asset": "files/document.pdf",
+          "path": "document.pdf"
+        },
+        {
+          "asset": "files/README.md",
+          "path": "README.md"
+        },
+        {
+          "asset": "files/manifest.json",
+          "path": "manifest.json"
+        },
+        {
+          "asset": "files/state.txt",
+          "path": "state.txt"
+        },
+        {
+          "asset": "files/checksums.sha",
+          "path": "checksums.sha"
+        },
+        {
+          "asset": "files/docs/README.md",
+          "path": "docs/README.md"
+        },
+        {
+          "asset": "files/docs/outline.txt",
+          "path": "docs/outline.txt"
+        },
+        {
+          "asset": "files/docs/metadata.json",
+          "path": "docs/metadata.json"
+        },
+        {
+          "asset": "files/data/README.md",
+          "path": "data/README.md"
+        },
+        {
+          "asset": "files/data/records.json",
+          "path": "data/records.json"
+        },
+        {
+          "asset": "files/data/input.txt",
+          "path": "data/input.txt"
+        },
+        {
+          "asset": "files/logs/README.md",
+          "path": "logs/README.md"
+        },
+        {
+          "asset": "files/logs/run.log",
+          "path": "logs/run.log"
+        },
+        {
+          "asset": "files/logs/events.jsonl",
+          "path": "logs/events.jsonl"
+        },
+        {
+          "asset": "files/output/result.txt",
+          "path": "output/result.txt"
+        },
+        {
+          "asset": "files/output/summary.md",
+          "path": "output/summary.md"
+        },
+        {
+          "asset": "files/output/index.json",
+          "path": "output/index.json"
+        }
+      ],
+      "name": "canonical-tree",
+      "schema_version": 1,
+      "template_version": 2
+    }
+  },
+  "cli": {
+    "about": "Create files, directories and compressed archives",
+    "arguments": [
+      {
+        "action": "SetTrue",
+        "arity": "0",
+        "conflicts": [
+          "canonical_tree"
+        ],
+        "global": false,
+        "help": "Create a timestamped main directory with the next persistent run number",
+        "id": "directory",
+        "long": "directory",
+        "positional": false,
+        "possible_values": [
+          "true",
+          "false"
+        ],
+        "required": false,
+        "short": "D"
+      },
+      {
+        "action": "SetTrue",
+        "arity": "0",
+        "conflicts": [],
+        "global": false,
+        "help": "Run the embedded canonical JSON tree and shell runner; defaults to the latest main directory",
+        "id": "canonical_tree",
+        "long": "canonical-tree",
+        "positional": false,
+        "possible_values": [
+          "true",
+          "false"
+        ],
+        "required": false,
+        "short": null
+      },
+      {
+        "action": "Set",
+        "arity": "1",
+        "conflicts": [],
+        "global": false,
+        "help": "Parent for -D, or target for --canonical-tree; default depends on the action",
+        "id": "path",
+        "long": "path",
+        "positional": false,
+        "possible_values": null,
+        "required": false,
+        "short": null
+      },
+      {
+        "action": "Set",
+        "arity": "1",
+        "conflicts": [],
+        "global": true,
+        "help": "Use this TOML configuration file",
+        "id": "config",
+        "long": "config",
+        "positional": false,
+        "possible_values": null,
+        "required": false,
+        "short": null
+      },
+      {
+        "action": "SetTrue",
+        "arity": "0",
+        "conflicts": [],
+        "global": true,
+        "help": "Print machine-readable JSON output",
+        "id": "json",
+        "long": "json",
+        "positional": false,
+        "possible_values": [
+          "true",
+          "false"
+        ],
+        "required": false,
+        "short": null
+      },
+      {
+        "action": "Set",
+        "arity": "1",
+        "conflicts": [],
+        "global": true,
+        "help": "Set output color behavior",
+        "id": "color",
+        "long": "color",
+        "positional": false,
+        "possible_values": [
+          "auto",
+          "always",
+          "never"
+        ],
+        "required": false,
+        "short": null
+      },
+      {
+        "action": "Help",
+        "arity": "0",
+        "conflicts": [],
+        "global": false,
+        "help": "Print help",
+        "id": "help",
+        "long": "help",
+        "positional": false,
+        "possible_values": null,
+        "required": false,
+        "short": "h"
+      },
+      {
+        "action": "Version",
+        "arity": "0",
+        "conflicts": [],
+        "global": false,
+        "help": "Print version",
+        "id": "version",
+        "long": "version",
+        "positional": false,
+        "possible_values": null,
+        "required": false,
+        "short": "V"
+      }
+    ],
+    "commands": [
+      {
+        "about": "Create one or more directories",
+        "arguments": [
+          {
+            "action": "Append",
+            "arity": "1..",
+            "conflicts": [],
+            "global": false,
+            "help": "Directories to create",
+            "id": "paths",
+            "long": null,
+            "positional": true,
+            "possible_values": null,
+            "required": true,
+            "short": null
+          },
+          {
+            "action": "SetTrue",
+            "arity": "0",
+            "conflicts": [
+              "no_parents"
+            ],
+            "global": false,
+            "help": "Create missing parent directories",
+            "id": "parents",
+            "long": "parents",
+            "positional": false,
+            "possible_values": [
+              "true",
+              "false"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "SetTrue",
+            "arity": "0",
+            "conflicts": [],
+            "global": false,
+            "help": "Require parent directories to exist",
+            "id": "no_parents",
+            "long": "no-parents",
+            "positional": false,
+            "possible_values": [
+              "true",
+              "false"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Use this TOML configuration file",
+            "id": "config",
+            "long": "config",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "SetTrue",
+            "arity": "0",
+            "conflicts": [],
+            "global": true,
+            "help": "Print machine-readable JSON output",
+            "id": "json",
+            "long": "json",
+            "positional": false,
+            "possible_values": [
+              "true",
+              "false"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Set output color behavior",
+            "id": "color",
+            "long": "color",
+            "positional": false,
+            "possible_values": [
+              "auto",
+              "always",
+              "never"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Help",
+            "arity": "0",
+            "conflicts": [],
+            "global": false,
+            "help": "Print help",
+            "id": "help",
+            "long": "help",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": "h"
+          }
+        ],
+        "commands": [],
+        "name": "mkdir"
+      },
+      {
+        "about": "Create files and write their contents",
+        "arguments": [
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Use this TOML configuration file",
+            "id": "config",
+            "long": "config",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "SetTrue",
+            "arity": "0",
+            "conflicts": [],
+            "global": true,
+            "help": "Print machine-readable JSON output",
+            "id": "json",
+            "long": "json",
+            "positional": false,
+            "possible_values": [
+              "true",
+              "false"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Set output color behavior",
+            "id": "color",
+            "long": "color",
+            "positional": false,
+            "possible_values": [
+              "auto",
+              "always",
+              "never"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Help",
+            "arity": "0",
+            "conflicts": [],
+            "global": false,
+            "help": "Print help",
+            "id": "help",
+            "long": "help",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": "h"
+          }
+        ],
+        "commands": [
+          {
+            "about": "Create a file, optionally writing text or stdin",
+            "arguments": [
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": false,
+                "help": "File to create",
+                "id": "path",
+                "long": null,
+                "positional": true,
+                "possible_values": null,
+                "required": true,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [
+                  "stdin"
+                ],
+                "global": false,
+                "help": "Write this UTF-8 text",
+                "id": "content",
+                "long": "content",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Copy bytes from standard input",
+                "id": "stdin",
+                "long": "stdin",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [
+                  "append"
+                ],
+                "global": false,
+                "help": "Replace existing file contents",
+                "id": "overwrite",
+                "long": "overwrite",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Append contents if the file already exists",
+                "id": "append",
+                "long": "append",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [
+                  "no_parents"
+                ],
+                "global": false,
+                "help": "Create missing parent directories",
+                "id": "parents",
+                "long": "parents",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Require parent directories to exist",
+                "id": "no_parents",
+                "long": "no-parents",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Use this TOML configuration file",
+                "id": "config",
+                "long": "config",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": true,
+                "help": "Print machine-readable JSON output",
+                "id": "json",
+                "long": "json",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Set output color behavior",
+                "id": "color",
+                "long": "color",
+                "positional": false,
+                "possible_values": [
+                  "auto",
+                  "always",
+                  "never"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Help",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Print help",
+                "id": "help",
+                "long": "help",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "h"
+              }
+            ],
+            "commands": [],
+            "name": "create"
+          }
+        ],
+        "name": "file"
+      },
+      {
+        "about": "Compress a file or directory into 7z or tar.gz",
+        "arguments": [
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": false,
+            "help": "Source file or directory",
+            "id": "source",
+            "long": null,
+            "positional": true,
+            "possible_values": null,
+            "required": true,
+            "short": null
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": false,
+            "help": "Archive path; defaults to SOURCE.FORMAT",
+            "id": "output",
+            "long": "output",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": "o"
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": false,
+            "help": "Archive format; defaults to the configured format",
+            "id": "format",
+            "long": "format",
+            "positional": false,
+            "possible_values": [
+              "7z",
+              "tar.gz"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": false,
+            "help": "Compression level: 0 (fastest) to 9 (strongest)",
+            "id": "level",
+            "long": "level",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Use this TOML configuration file",
+            "id": "config",
+            "long": "config",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "SetTrue",
+            "arity": "0",
+            "conflicts": [],
+            "global": true,
+            "help": "Print machine-readable JSON output",
+            "id": "json",
+            "long": "json",
+            "positional": false,
+            "possible_values": [
+              "true",
+              "false"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Set output color behavior",
+            "id": "color",
+            "long": "color",
+            "positional": false,
+            "possible_values": [
+              "auto",
+              "always",
+              "never"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Help",
+            "arity": "0",
+            "conflicts": [],
+            "global": false,
+            "help": "Print help",
+            "id": "help",
+            "long": "help",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": "h"
+          }
+        ],
+        "commands": [],
+        "name": "compress"
+      },
+      {
+        "about": "View, edit and validate settings",
+        "arguments": [
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Use this TOML configuration file",
+            "id": "config",
+            "long": "config",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "SetTrue",
+            "arity": "0",
+            "conflicts": [],
+            "global": true,
+            "help": "Print machine-readable JSON output",
+            "id": "json",
+            "long": "json",
+            "positional": false,
+            "possible_values": [
+              "true",
+              "false"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Set output color behavior",
+            "id": "color",
+            "long": "color",
+            "positional": false,
+            "possible_values": [
+              "auto",
+              "always",
+              "never"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Help",
+            "arity": "0",
+            "conflicts": [],
+            "global": false,
+            "help": "Print help",
+            "id": "help",
+            "long": "help",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": "h"
+          }
+        ],
+        "commands": [
+          {
+            "about": "Open the interactive configuration menu",
+            "arguments": [
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Use this TOML configuration file",
+                "id": "config",
+                "long": "config",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": true,
+                "help": "Print machine-readable JSON output",
+                "id": "json",
+                "long": "json",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Set output color behavior",
+                "id": "color",
+                "long": "color",
+                "positional": false,
+                "possible_values": [
+                  "auto",
+                  "always",
+                  "never"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Help",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Print help",
+                "id": "help",
+                "long": "help",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "h"
+              }
+            ],
+            "commands": [],
+            "name": "menu"
+          },
+          {
+            "about": "Show stored settings, including defaults",
+            "arguments": [
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Include environment/CLI overrides and value sources",
+                "id": "effective",
+                "long": "effective",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Use this TOML configuration file",
+                "id": "config",
+                "long": "config",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": true,
+                "help": "Print machine-readable JSON output",
+                "id": "json",
+                "long": "json",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Set output color behavior",
+                "id": "color",
+                "long": "color",
+                "positional": false,
+                "possible_values": [
+                  "auto",
+                  "always",
+                  "never"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Help",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Print help",
+                "id": "help",
+                "long": "help",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "h"
+              }
+            ],
+            "commands": [],
+            "name": "show"
+          },
+          {
+            "about": "Read an effective setting by dotted key",
+            "arguments": [
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": false,
+                "help": null,
+                "id": "key",
+                "long": null,
+                "positional": true,
+                "possible_values": null,
+                "required": true,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Use this TOML configuration file",
+                "id": "config",
+                "long": "config",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": true,
+                "help": "Print machine-readable JSON output",
+                "id": "json",
+                "long": "json",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Set output color behavior",
+                "id": "color",
+                "long": "color",
+                "positional": false,
+                "possible_values": [
+                  "auto",
+                  "always",
+                  "never"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Help",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Print help",
+                "id": "help",
+                "long": "help",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "h"
+              }
+            ],
+            "commands": [],
+            "name": "get"
+          },
+          {
+            "about": "Persist one setting, for example compression.level 3",
+            "arguments": [
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": false,
+                "help": null,
+                "id": "key",
+                "long": null,
+                "positional": true,
+                "possible_values": null,
+                "required": true,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": false,
+                "help": null,
+                "id": "value",
+                "long": null,
+                "positional": true,
+                "possible_values": null,
+                "required": true,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Use this TOML configuration file",
+                "id": "config",
+                "long": "config",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": true,
+                "help": "Print machine-readable JSON output",
+                "id": "json",
+                "long": "json",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Set output color behavior",
+                "id": "color",
+                "long": "color",
+                "positional": false,
+                "possible_values": [
+                  "auto",
+                  "always",
+                  "never"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Help",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Print help",
+                "id": "help",
+                "long": "help",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "h"
+              }
+            ],
+            "commands": [],
+            "name": "set"
+          },
+          {
+            "about": "Create a default configuration file",
+            "arguments": [
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Replace the configuration file with defaults",
+                "id": "force",
+                "long": "force",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Use this TOML configuration file",
+                "id": "config",
+                "long": "config",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": true,
+                "help": "Print machine-readable JSON output",
+                "id": "json",
+                "long": "json",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Set output color behavior",
+                "id": "color",
+                "long": "color",
+                "positional": false,
+                "possible_values": [
+                  "auto",
+                  "always",
+                  "never"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Help",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Print help",
+                "id": "help",
+                "long": "help",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "h"
+              }
+            ],
+            "commands": [],
+            "name": "init"
+          },
+          {
+            "about": "Print the selected configuration path",
+            "arguments": [
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Use this TOML configuration file",
+                "id": "config",
+                "long": "config",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": true,
+                "help": "Print machine-readable JSON output",
+                "id": "json",
+                "long": "json",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Set output color behavior",
+                "id": "color",
+                "long": "color",
+                "positional": false,
+                "possible_values": [
+                  "auto",
+                  "always",
+                  "never"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Help",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Print help",
+                "id": "help",
+                "long": "help",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "h"
+              }
+            ],
+            "commands": [],
+            "name": "path"
+          },
+          {
+            "about": "Validate the selected configuration file",
+            "arguments": [
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Use this TOML configuration file",
+                "id": "config",
+                "long": "config",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": true,
+                "help": "Print machine-readable JSON output",
+                "id": "json",
+                "long": "json",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Set output color behavior",
+                "id": "color",
+                "long": "color",
+                "positional": false,
+                "possible_values": [
+                  "auto",
+                  "always",
+                  "never"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Help",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Print help",
+                "id": "help",
+                "long": "help",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "h"
+              }
+            ],
+            "commands": [],
+            "name": "validate"
+          },
+          {
+            "about": "Export the settings JSON Schema",
+            "arguments": [
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": false,
+                "help": "Write JSON to this file instead of stdout",
+                "id": "output",
+                "long": "output",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "o"
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Use this TOML configuration file",
+                "id": "config",
+                "long": "config",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "SetTrue",
+                "arity": "0",
+                "conflicts": [],
+                "global": true,
+                "help": "Print machine-readable JSON output",
+                "id": "json",
+                "long": "json",
+                "positional": false,
+                "possible_values": [
+                  "true",
+                  "false"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Set",
+                "arity": "1",
+                "conflicts": [],
+                "global": true,
+                "help": "Set output color behavior",
+                "id": "color",
+                "long": "color",
+                "positional": false,
+                "possible_values": [
+                  "auto",
+                  "always",
+                  "never"
+                ],
+                "required": false,
+                "short": null
+              },
+              {
+                "action": "Help",
+                "arity": "0",
+                "conflicts": [],
+                "global": false,
+                "help": "Print help",
+                "id": "help",
+                "long": "help",
+                "positional": false,
+                "possible_values": null,
+                "required": false,
+                "short": "h"
+              }
+            ],
+            "commands": [],
+            "name": "schema"
+          }
+        ],
+        "name": "config"
+      },
+      {
+        "about": "Export the CLI command structure as JSON",
+        "arguments": [
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": false,
+            "help": "Write JSON to this file instead of stdout",
+            "id": "output",
+            "long": "output",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": "o"
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Use this TOML configuration file",
+            "id": "config",
+            "long": "config",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "SetTrue",
+            "arity": "0",
+            "conflicts": [],
+            "global": true,
+            "help": "Print machine-readable JSON output",
+            "id": "json",
+            "long": "json",
+            "positional": false,
+            "possible_values": [
+              "true",
+              "false"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Set",
+            "arity": "1",
+            "conflicts": [],
+            "global": true,
+            "help": "Set output color behavior",
+            "id": "color",
+            "long": "color",
+            "positional": false,
+            "possible_values": [
+              "auto",
+              "always",
+              "never"
+            ],
+            "required": false,
+            "short": null
+          },
+          {
+            "action": "Help",
+            "arity": "0",
+            "conflicts": [],
+            "global": false,
+            "help": "Print help",
+            "id": "help",
+            "long": "help",
+            "positional": false,
+            "possible_values": null,
+            "required": false,
+            "short": "h"
+          }
+        ],
+        "commands": [],
+        "name": "schema"
+      }
+    ],
+    "name": "devtool"
+  },
+  "directory_mode": {
+    "counter_scope": "per user, shared across parent paths",
+    "default_parent": "current working directory",
+    "flag": "-D",
+    "initial_run": 1,
+    "name_template": "YYYYMMDDTHHMMSSZ_run-nr.NNN",
+    "naming_configurable": false,
+    "path_flag": "--path",
+    "run_minimum_digits": 3,
+    "timestamp_timezone": "UTC"
+  },
+  "schema_version": 1,
+  "version": "0.5.0"
+}

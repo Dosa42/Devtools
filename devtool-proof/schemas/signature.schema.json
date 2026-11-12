@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Signature",
+  "type": "object",
+  "properties": {
+    "algorithm": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "string"
+    },
+    "hash_algorithm": {
+      "$ref": "#/$defs/Algorithm"
+    },
+    "public_key": {
+      "type": "string"
+    },
+    "schema": {
+      "type": "string"
+    },
+    "signature": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "algorithm",
+    "hash_algorithm",
+    "hash",
+    "public_key",
+    "signature"
+  ],
+  "$defs": {
+    "Algorithm": {
+      "type": "string",
+      "enum": [
+        "sha256",
+        "sha512"
+      ]
+    }
+  }
+}

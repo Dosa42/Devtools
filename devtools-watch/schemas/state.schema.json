@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "devtools-watch state v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "canonical_tree",
+    "sha_present",
+    "sha_scope",
+    "sha_checksum",
+    "sha_signature",
+    "provenance_present",
+    "provenance_scope",
+    "provenance",
+    "provenance_signature"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "canonical_tree": {
+      "type": "boolean"
+    },
+    "sha_present": {
+      "type": "boolean"
+    },
+    "sha_scope": {
+      "type": "boolean"
+    },
+    "sha_checksum": {
+      "type": "boolean"
+    },
+    "sha_signature": {
+      "type": "boolean"
+    },
+    "provenance_present": {
+      "type": "boolean"
+    },
+    "provenance_scope": {
+      "type": "boolean"
+    },
+    "provenance": {
+      "type": "boolean"
+    },
+    "provenance_signature": {
+      "type": "boolean"
+    }
+  }
+}

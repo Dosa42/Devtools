@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "template": "canonical-tree",
+  "template_version": 2,
+  "derived_outputs": [
+    "state.txt"
+  ]
+}

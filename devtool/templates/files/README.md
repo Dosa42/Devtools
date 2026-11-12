@@ -1,0 +1,3 @@
+# Project
+
+Canonical project workspace.

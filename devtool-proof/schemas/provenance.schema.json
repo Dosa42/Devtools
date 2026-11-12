@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Provenance",
+  "type": "object",
+  "properties": {
+    "created_unix_ms": {
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0
+    },
+    "declared_command": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Record"
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Record"
+      }
+    },
+    "run": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schema": {
+      "type": "string"
+    },
+    "snapshot": {
+      "$ref": "#/$defs/Manifest"
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "created_unix_ms",
+    "tools",
+    "snapshot",
+    "inputs",
+    "outputs"
+  ],
+  "$defs": {
+    "Algorithm": {
+      "type": "string",
+      "enum": [
+        "sha256",
+        "sha512"
+      ]
+    },
+    "Manifest": {
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "$ref": "#/$defs/Algorithm"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Record"
+          }
+        },
+        "schema": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "algorithm",
+        "entries"
+      ]
+    },
+    "Record": {
+      "type": "object",
+      "properties": {
+        "bytes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        },
+        "hash": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "hash"
+      ]
+    }
+  }
+}

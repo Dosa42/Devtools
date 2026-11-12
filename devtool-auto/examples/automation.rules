@@ -1,0 +1,21 @@
+rule archive-after-tree
+  mode after
+  matcher command devtool
+  matcher flag canonical-tree
+  action profile archive
+end
+
+rule incoming-files
+  mode change
+  matcher path linux-fs/tmp/incoming
+  recursive true
+  poll 100ms
+  debounce 300ms
+  action profile process-incoming
+end
+
+rule hourly-backup
+  mode timer
+  interval 1h
+  action profile backup
+end

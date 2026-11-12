@@ -1,0 +1,315 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "rules"
+  ],
+  "properties": {
+    "schema": {
+      "const": "devtool-auto.rules/1"
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "mode",
+          "cwd",
+          "enabled",
+          "matchers",
+          "action",
+          "timer",
+          "watch"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^(?!\\.{1,2}$)[A-Za-z0-9_.-]+$"
+          },
+          "mode": {
+            "enum": [
+              "before",
+              "after",
+              "error",
+              "timer",
+              "change"
+            ]
+          },
+          "cwd": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "matchers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "field",
+                "value"
+              ],
+              "properties": {
+                "field": {
+                  "enum": [
+                    "command",
+                    "flag",
+                    "path",
+                    "profile",
+                    "step",
+                    "exit"
+                  ]
+                },
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^[^\\r\\n]+$"
+                }
+              }
+            }
+          },
+          "action": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "profile"
+            ],
+            "properties": {
+              "profile": {
+                "type": "string",
+                "pattern": "^(?!\\.{1,2}$)[A-Za-z0-9_.-]+$"
+              }
+            }
+          },
+          "timer": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "after_ms",
+                  "interval_ms",
+                  "runs"
+                ],
+                "properties": {
+                  "after_ms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 18446744073709551615
+                  },
+                  "interval_ms": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 18446744073709551615
+                  },
+                  "runs": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 18446744073709551615
+                  }
+                }
+              }
+            ]
+          },
+          "watch": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "recursive",
+                  "poll_ms",
+                  "debounce_ms",
+                  "initial",
+                  "runs"
+                ],
+                "properties": {
+                  "recursive": {
+                    "type": "boolean"
+                  },
+                  "poll_ms": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 18446744073709551615
+                  },
+                  "debounce_ms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 18446744073709551615
+                  },
+                  "initial": {
+                    "type": "boolean"
+                  },
+                  "runs": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 18446744073709551615
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "timer"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "timer": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "after_ms",
+                    "interval_ms",
+                    "runs"
+                  ],
+                  "properties": {
+                    "after_ms": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 18446744073709551615
+                    },
+                    "interval_ms": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 18446744073709551615
+                    },
+                    "runs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 18446744073709551615
+                    }
+                  }
+                },
+                "watch": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "change"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "timer": {
+                  "type": "null"
+                },
+                "watch": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "recursive",
+                    "poll_ms",
+                    "debounce_ms",
+                    "initial",
+                    "runs"
+                  ],
+                  "properties": {
+                    "recursive": {
+                      "type": "boolean"
+                    },
+                    "poll_ms": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 18446744073709551615
+                    },
+                    "debounce_ms": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 18446744073709551615
+                    },
+                    "initial": {
+                      "type": "boolean"
+                    },
+                    "runs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 18446744073709551615
+                    }
+                  }
+                },
+                "matchers": {
+                  "contains": {
+                    "properties": {
+                      "field": {
+                        "const": "path"
+                      },
+                      "value": {
+                        "pattern": "^[^*?]+$"
+                      }
+                    }
+                  },
+                  "minContains": 1,
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "field": {
+                          "const": "path"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "value": {
+                          "pattern": "^[^*?]+$"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "enum": [
+                    "before",
+                    "after",
+                    "error"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "timer": {
+                  "type": "null"
+                },
+                "watch": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Devtool automation rules v1"
+}

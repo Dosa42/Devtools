@@ -1,0 +1,84 @@
+{
+  "directories": [
+    "docs",
+    "data",
+    "logs",
+    "output"
+  ],
+  "files": [
+    {
+      "asset": "files/document.pdf",
+      "path": "document.pdf"
+    },
+    {
+      "asset": "files/README.md",
+      "path": "README.md"
+    },
+    {
+      "asset": "files/manifest.json",
+      "path": "manifest.json"
+    },
+    {
+      "asset": "files/state.txt",
+      "path": "state.txt"
+    },
+    {
+      "asset": "files/checksums.sha",
+      "path": "checksums.sha"
+    },
+    {
+      "asset": "files/docs/README.md",
+      "path": "docs/README.md"
+    },
+    {
+      "asset": "files/docs/outline.txt",
+      "path": "docs/outline.txt"
+    },
+    {
+      "asset": "files/docs/metadata.json",
+      "path": "docs/metadata.json"
+    },
+    {
+      "asset": "files/data/README.md",
+      "path": "data/README.md"
+    },
+    {
+      "asset": "files/data/records.json",
+      "path": "data/records.json"
+    },
+    {
+      "asset": "files/data/input.txt",
+      "path": "data/input.txt"
+    },
+    {
+      "asset": "files/logs/README.md",
+      "path": "logs/README.md"
+    },
+    {
+      "asset": "files/logs/run.log",
+      "path": "logs/run.log"
+    },
+    {
+      "asset": "files/logs/events.jsonl",
+      "path": "logs/events.jsonl"
+    },
+    {
+      "asset": "files/output/result.txt",
+      "path": "output/result.txt"
+    },
+    {
+      "asset": "files/output/summary.md",
+      "path": "output/summary.md"
+    },
+    {
+      "asset": "files/output/index.json",
+      "path": "output/index.json"
+    }
+  ],
+  "name": "canonical-tree",
+  "schema_version": 1,
+  "template_version": 2,
+  "derived_outputs": [
+    "state.txt"
+  ]
+}

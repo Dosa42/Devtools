@@ -1,0 +1,113 @@
+{
+  "$defs": {
+    "ArchiveFormat": {
+      "enum": [
+        "7z",
+        "tar.gz"
+      ],
+      "type": "string"
+    },
+    "ColorMode": {
+      "enum": [
+        "auto",
+        "always",
+        "never"
+      ],
+      "type": "string"
+    },
+    "Compression": {
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/ArchiveFormat",
+          "default": "tar.gz"
+        },
+        "level": {
+          "default": 6,
+          "format": "uint8",
+          "maximum": 9,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ExistingFile": {
+      "enum": [
+        "error",
+        "overwrite",
+        "append"
+      ],
+      "type": "string"
+    },
+    "Filesystem": {
+      "additionalProperties": false,
+      "properties": {
+        "create_parents": {
+          "default": true,
+          "type": "boolean"
+        },
+        "existing_file": {
+          "$ref": "#/$defs/ExistingFile",
+          "default": "error"
+        }
+      },
+      "type": "object"
+    },
+    "Output": {
+      "additionalProperties": false,
+      "properties": {
+        "color": {
+          "$ref": "#/$defs/ColorMode",
+          "default": "auto"
+        },
+        "format": {
+          "$ref": "#/$defs/OutputFormat",
+          "default": "text"
+        }
+      },
+      "type": "object"
+    },
+    "OutputFormat": {
+      "enum": [
+        "text",
+        "json"
+      ],
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "compression": {
+      "$ref": "#/$defs/Compression",
+      "default": {
+        "format": "tar.gz",
+        "level": 6
+      }
+    },
+    "filesystem": {
+      "$ref": "#/$defs/Filesystem",
+      "default": {
+        "create_parents": true,
+        "existing_file": "error"
+      }
+    },
+    "output": {
+      "$ref": "#/$defs/Output",
+      "default": {
+        "color": "auto",
+        "format": "text"
+      }
+    },
+    "schema_version": {
+      "default": 1,
+      "format": "uint32",
+      "maximum": 1,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "title": "Settings",
+  "type": "object"
+}

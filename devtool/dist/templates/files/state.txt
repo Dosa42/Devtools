@@ -1,0 +1,10 @@
+schema_version: 1
+canonical_tree: false
+sha_present: false
+sha_scope: false
+sha_checksum: false
+sha_signature: false
+provenance_present: false
+provenance_scope: false
+provenance: false
+provenance_signature: false

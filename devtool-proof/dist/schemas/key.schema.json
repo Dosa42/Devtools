@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Key",
+  "type": "object",
+  "properties": {
+    "algorithm": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "schema": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "kind",
+    "algorithm",
+    "key"
+  ]
+}

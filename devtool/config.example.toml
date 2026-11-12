@@ -1,0 +1,13 @@
+schema_version = 1
+
+[filesystem]
+create_parents = true
+existing_file = "error"
+
+[compression]
+format = "tar.gz"
+level = 6
+
+[output]
+format = "text"
+color = "auto"

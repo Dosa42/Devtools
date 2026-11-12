@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111513">
+  <title>devtool — terminal demo</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/xterm.css">
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/vendor/xterm.js"></script>
+  <script defer src="/vendor/addon-fit.js"></script>
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#terminal">Naar de terminal</a>
+  <main class="app">
+    <header class="page-heading">
+      <div><span class="eyebrow">LOCALHOST / CLI WERKPLAATS</span><h1>devtool<span class="heading-slash">/</span><span class="heading-light">terminal demo</span></h1></div>
+      <div class="page-actions"><span id="version" class="version">0.5.0</span><button id="new-session" class="subtle-button" type="button">Nieuwe sessie <span aria-hidden="true">↗</span></button></div>
+    </header>
+    <section class="terminal-window" aria-label="Devtool Bash-terminal">
+      <header class="window-header">
+        <div class="window-identity"><span class="window-mark" aria-hidden="true">›_</span><strong>bash</strong><span id="session-label" class="muted">verbinden…</span></div>
+        <div class="window-controls"><span id="connection" class="connection" role="status">Verbinden</span><button id="files-toggle" class="subtle-button" type="button" aria-expanded="true" aria-controls="inspector">Paneel <span aria-hidden="true">▤</span></button></div>
+      </header>
+      <div class="command-header">
+        <span class="row-label">COMMANDS</span>
+        <nav class="command-buttons" aria-label="Vaste devtool-commands">
+          <button type="button" class="command primary" data-command="devtool -D"><span class="command-index">01</span><code>-D</code><span>Hoofdmap</span></button>
+          <button type="button" class="command" data-command="devtool --canonical-tree"><span class="command-index">02</span><code>--canonical-tree</code></button>
+          <button type="button" id="compression-toggle" class="command" aria-expanded="false" aria-controls="compression-panel"><span class="command-index">03</span><code>compress</code><span aria-hidden="true">⌄</span></button>
+          <button type="button" class="command" data-command="devtool config menu"><span class="command-index">04</span><code>config menu</code></button>
+          <button type="button" class="command" data-command="devtool --help"><code>--help</code></button>
+          <button type="button" id="catalog-toggle" class="command text-command" aria-expanded="false" aria-controls="catalog-panel">Alle commands <span aria-hidden="true">⌄</span></button>
+        </nav>
+      </div>
+      <div id="compression-panel" class="header-panel" hidden>
+        <form id="compression-form" class="compression-form">
+          <label>Bron<input id="compression-source" placeholder="pad/naar/hoofdmap" autocomplete="off"></label>
+          <label>Formaat<select id="compression-format"><option value="">Uit settings</option><option value="7z">7z</option><option value="tar.gz">tar.gz</option></select></label>
+          <label>Uitvoer<input id="compression-output" placeholder="optioneel: archief.7z" autocomplete="off"></label>
+          <button type="submit" class="solid-button">Op opdrachtregel zetten <span aria-hidden="true">↵</span></button>
+        </form>
+        <code id="compression-preview" class="command-preview">devtool compress</code>
+      </div>
+      <div id="catalog-panel" class="header-panel catalog" hidden></div>
+      <div class="settings-header">
+        <button id="settings-command" type="button" class="settings-heading" data-command="devtool config menu"><span class="row-label">SETTINGS</span><span aria-hidden="true">⌁</span></button>
+        <div id="settings-values" class="settings-values" aria-label="Huidige standaardinstellingen"><span class="muted">Instellingen laden…</span></div>
+        <button type="button" class="settings-show" data-command="devtool config show --effective" aria-label="Zet effectieve instellingen op de opdrachtregel">Tonen <span aria-hidden="true">↗</span></button>
+      </div>
+      <div class="work-surface">
+        <section class="terminal-panel" aria-label="Interactieve terminal">
+          <div class="terminal-context"><span id="cwd">~/workspace</span><span id="terminal-size" class="muted">BASH PTY</span></div>
+          <div id="terminal" tabindex="-1" aria-label="Bash-terminal, typ een command en druk op Enter"></div>
+          <div id="terminal-error" class="terminal-error" role="alert" hidden></div>
+          <form id="line-form" class="line-form"><label for="line-input" class="line-prefix">$</label><input id="line-input" placeholder="Typ een command of menuantwoord…" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="submit" aria-label="Verstuur de ingevoerde regel">Enter ↵</button></form>
+          <div class="terminal-footer"><span class="footer-hint">Headerbuttons zetten tekst op de opdrachtregel. <kbd>Enter</kbd> voert uit.</span><div class="key-buttons"><button type="button" data-key="tab">Tab</button><button type="button" data-key="up" aria-label="Vorig command">↑</button><button type="button" data-key="down" aria-label="Volgend command">↓</button><button type="button" data-key="interrupt">Ctrl C</button><button type="button" data-key="eof">Ctrl D</button></div></div>
+        </section>
+        <aside id="inspector" class="inspector" aria-label="Live meekijkpaneel">
+          <div class="inspector-nav" aria-label="Paneelweergave">
+            <button id="telemetry-tab" type="button" aria-pressed="true" aria-controls="telemetry-panel">Telemetrie</button>
+            <button id="files-tab" type="button" aria-pressed="false" aria-controls="file-panel">Bestanden</button>
+            <span class="inspector-label">LIVE / SESSION</span>
+          </div>
+          <section id="telemetry-panel" class="telemetry-panel" aria-labelledby="telemetry-title">
+            <header class="telemetry-heading"><div><span class="row-label">MEEKIJKEN</span><h2 id="telemetry-title">Sessie in beeld</h2></div><span id="telemetry-status" class="telemetry-status" role="status" data-state="loading">Verbinden…</span></header>
+            <div class="telemetry-scroll" tabindex="0" aria-label="Live sessiegegevens">
+              <section class="telemetry-current" aria-labelledby="current-title">
+                <div class="telemetry-section-heading"><h3 id="current-title">Nu actief</h3><span id="telemetry-mode">Laden</span></div>
+                <code id="telemetry-current-command" class="current-command">Wachten op sessiegegevens…</code>
+                <div id="telemetry-current-meta" class="telemetry-meta"></div>
+              </section>
+              <section class="telemetry-section" aria-labelledby="engines-title">
+                <div class="telemetry-section-heading"><h3 id="engines-title">Executables</h3><span>4 standalone CLI’s</span></div>
+                <div id="telemetry-engines" class="engine-list"></div>
+              </section>
+              <section class="telemetry-section" aria-labelledby="history-title">
+                <div class="telemetry-section-heading"><h3 id="history-title">Commandtijdlijn</h3><span id="telemetry-command-count">0</span></div>
+                <ol id="telemetry-history" class="command-history"><li class="telemetry-empty">Nog geen commands uitgevoerd in deze sessie.</li></ol>
+              </section>
+              <section class="telemetry-section" aria-labelledby="process-title">
+                <div class="telemetry-section-heading"><h3 id="process-title">Processen</h3><span id="telemetry-process-count">—</span></div>
+                <div id="telemetry-processes" class="process-list"><p class="telemetry-empty">Processtatus laden…</p></div>
+              </section>
+              <footer class="telemetry-source"><span>Bash-events + /proc</span><span id="telemetry-updated">Nog geen meting</span><p>Procesmeting elke 150 ms. Korte processen kunnen tussen metingen vallen; Bash registreert ook die commands.</p></footer>
+            </div>
+          </section>
+        <section id="file-panel" class="file-panel" aria-label="Demo-werkmap" hidden>
+          <header class="files-heading"><div><span class="row-label">WERKMAP</span><span id="file-count" class="muted">0 bestanden</span></div><button id="refresh-files" class="icon-button" type="button" aria-label="Werkmap vernieuwen">↻</button></header>
+          <div id="file-tree" class="file-tree"><div class="files-empty"><span aria-hidden="true">└─</span><p>De werkmap is nog leeg.</p><p class="muted">Begin met <code>devtool -D</code>.</p></div></div>
+          <section id="file-preview" class="file-preview" hidden><header><strong id="preview-name"></strong><a id="download-file" target="_blank" rel="noopener">Openen ↗</a><button id="close-preview" type="button" class="icon-button" aria-label="Bestandsvoorbeeld sluiten">×</button></header><div id="preview-content"></div></section>
+        </section>
+        </aside>
+      </div>
+      <footer class="session-footer"><span><span class="status-dot" aria-hidden="true"></span> Eigen demo-werkmap <span class="footer-separator">/</span> huidige Rust-binary</span><span id="run-status">Nog geen hoofdmap</span></footer>
+    </section>
+    <footer class="page-footer"><span>devtool 0.5.0 <span aria-hidden="true">·</span> Bash-PTY <span aria-hidden="true">·</span> localhost</span><span id="activity" role="status">Opstarten…</span></footer>
+  </main>
+</body>
+</html>
