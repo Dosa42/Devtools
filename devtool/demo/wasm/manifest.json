@@ -1,0 +1,34 @@
+{
+  "schema": "devtools.wasm-ui/1",
+  "version": "0.1.0",
+  "target": "wasm32-unknown-unknown",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13) (built from a source tarball)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: aarch64-linux-android\nrelease: 1.99.1\nLLVM version: 21.1.8",
+  "wasm_bindgen": "0.2.130",
+  "toolchain_ref": null,
+  "toolchain_manifests": {},
+  "sources": {
+    "demo/app.js": "72f26acd951a95143d4767506d48560cbd85497d07aab019c3a3f064c4721216",
+    "demo/index.html": "6e7119495a6e552d4d0418f1853b28adc45d547a27d4d7ab76645c86bbaa70f8",
+    "demo/style.css": "f963cffe130dfd7aeb557e9c502f5e26eaeddfb9b0e85f4e9fc673fcdc3be3a4",
+    "demo/terminal.js": "55a9d9981259108bf3fb5eabac61a69512d9b69091e96ee15adb4d1a7b1619b6",
+    "ui/Cargo.lock": "0fdcfdbbc7d73816022d315d4c4f8a9a1217d900d4195a66eef38305b8f7f4dc",
+    "ui/Cargo.toml": "bc1cb2bb0b4c468645d11d7857c1effdbababbd1af050db2f98fb5e7ad488e28",
+    "ui/build.py": "4684eda24c2a5c87f6a6b8dde20f22c8a1ea204b4603b4a67a1d2aed8d3e45e1",
+    "ui/minify.cjs": "84fb7d859e68d01cbb27ed0abf97a3cc83c537fe35f841ca8f918330a0798cbf",
+    "ui/src/app.rs": "aab740a81ca491f6481a6e4abcf2db71ff7c62379fb5fe1338c11684e1970ca2",
+    "ui/src/lib.rs": "67d66510d5bf7a9ed8eec4db3feeafaaaa277191d11f69bb7478a04c53c7fc53",
+    "ui/src/model.rs": "d093bd19e1b441e6b61bd538a4751983e287eeb27f4606a5578c8c783870c316",
+    "ui/src/render.rs": "d219d045c826687acf971dbf6cfb0d1bdef605b2210f09c98ce0716429332f77",
+    "ui/src/shell.html": "771b3c5ed9158e4c3d769caccd6f48745fdb92211d6cb6ee93fefa1cc50d4244"
+  },
+  "files": {
+    "devtools_ui.js": {
+      "sha256": "7e3a7754593632f3c6c10c1d58f5fd92b2115c677c15ce4250b6b2ef2c4d607d",
+      "bytes": 13282
+    },
+    "devtools_ui_bg.wasm": {
+      "sha256": "58ec9614b336ed79e2a21737d012aa0f091c2677fc80068eb2387b7e8e9f957a",
+      "bytes": 199107
+    }
+  }
+}

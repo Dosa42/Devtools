@@ -1,6 +1,6 @@
 # Devtools
 
-Vier zelfstandige Rust CLI’s voor bestandsstructuren, automatisering, bewijsberekening en een deterministische achtergrondmonitor. De localhostdemo combineert ze met een echte Bash-terminal en een live meekijkpaneel.
+Vier zelfstandige Rust CLI’s voor bestandsstructuren, automatisering, bewijsberekening en een deterministische achtergrondmonitor. De localhostwerkplaats combineert ze met een gecompileerde Rust/WebAssembly-interface, echte Bash-terminal en een live meekijkpaneel.
 
 Iedere executable heeft een eigen Cargo-project, `main.rs`, `lib.rs`, configuratie en tests. De programma’s werken samen via CLI-opdrachten en bestanden. De meegeleverde binaries zijn **Android/Termux ARM64 ELF-executables**. Voor Linux bouw je de programma’s op het bijbehorende platform; ELF alleen maakt een Android-binary niet uitwisselbaar met Linux.
 
@@ -17,7 +17,7 @@ Iedere executable heeft een eigen Cargo-project, `main.rs`, `lib.rs`, configurat
 
 ```mermaid
 flowchart TD
-    UI["Browser: terminal en meekijkpaneel"] <--> API["Localhostserver :8765"]
+    UI["Browser: Rust/WASM UI, terminal en meekijkpaneel"] <--> API["Localhostserver :8765"]
     API --> START["Sessiestarter"]
     START --> WATCH["1. devtools-watch --on"]
     WATCH --> READY["Actief Watch-proces bevestigd"]
@@ -245,3 +245,14 @@ npm test
 De Rust-tests voeren de echte CLI’s uit. De demo-integratietests controleren de PTY, canonical files, archieven, interactieve configuratie, Watch-startvolgorde en telemetrie. Voor de onafhankelijke cryptografische testcontroles zijn `sha256sum`, `sha512sum` en OpenSSL nodig. De aanvullende browsertest gebruikt een geopende demo via CDP en Python `websockets`; zie de [demo-handleiding](devtool/demo/README.md).
 
 Deze gepubliceerde versie is gecontroleerd met **69 Rust-integratietests en 13 demo-integratietests** op Android/Termux ARM64; alle 82 controles slagen.
+
+## Rust/WebAssembly-interface
+
+De UI-broncode staat in [`devtool/ui`](devtool/ui/README.md). Rust beheert de sessie, menu’s, commandbediening, instellingen, bestanden en telemetryweergave. De kleine `terminal.js`-adapter verbindt xterm met Rust/WASM. De vier CLI’s, Watch en de echte Bash-PTY draaien op de host via de bestaande localhostserver.
+
+```sh
+python devtool/ui/build.py
+python devtool/demo/server.py --port 8765
+```
+
+De ingecheckte `devtool/demo/wasm` bevat de gecompileerde module en loader. De Actions-build gebruikt de vastgelegde ARM64-toolchain uit Assembler-compiler-lib, inclusief de extra `wasm-bindgen`-distributie. Eén browserbuild wordt opgenomen in alle vier platformpakketten en afzonderlijk gepubliceerd onder `all-dist/wasm-ui`. De ARM64-platformjob test de UI met Chromium en de vier native executables.

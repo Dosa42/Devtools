@@ -256,7 +256,7 @@ class Handler(BaseHTTPRequestHandler):
             path = ROOT / ('index.html' if url.path == '/' else url.path.lstrip('/'))
             path = path.resolve()
             path.relative_to(ROOT)
-            if path.parts[len(ROOT.parts)] not in ['index.html', 'app.js', 'style.css', 'vendor', 'favicon.svg']:
+            if path.parts[len(ROOT.parts)] not in ['index.html', 'app.js', 'terminal.js', 'wasm', 'style.css', 'vendor', 'favicon.svg']:
                 return self.send_json(404, {'error': 'Bestand bestaat niet'})
             return self.send_data(200, path.read_bytes(), (mimetypes.guess_type(path.name)[0] or 'application/octet-stream') + ('; charset=utf-8' if path.suffix in ['.html', '.js', '.css', '.svg'] else ''))
         except (BrokenPipeError, ConnectionResetError):

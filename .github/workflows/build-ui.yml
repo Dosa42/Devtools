@@ -1,0 +1,35 @@
+name: Build Rust WASM UI
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  wasm:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    env:
+      CARGO_BUILD_JOBS: '3'
+      CARGO_TARGET_DIR: ${{ github.workspace }}/.build/ui-target
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Install host dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y build-essential pkg-config libssl-dev nodejs npm xz-utils
+      - name: Compile UI with the published source-built toolchain
+        run: python devtool/ui/build.py --toolchain-ref 28ada6e5184e3f2599980321b1ec67084fb742d3
+      - name: Package browser distribution
+        run: python .github/scripts/package-wasm-ui.py
+      - uses: actions/upload-artifact@v7
+        with:
+          name: wasm-ui-assets
+          path: .build/wasm-ui/
+          if-no-files-found: error
+          retention-days: 30

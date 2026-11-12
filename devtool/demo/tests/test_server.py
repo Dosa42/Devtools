@@ -62,7 +62,7 @@ class DemoTests(unittest.TestCase):
         self.wait_for(lambda: session.ready)
 
     def test_local_assets_and_actual_cli_metadata(self):
-        for path in ['/', '/app.js', '/style.css', '/vendor/xterm.js', '/vendor/addon-fit.js', '/vendor/xterm.css']:
+        for path in ['/', '/app.js', '/terminal.js', '/wasm/devtools_ui.js', '/wasm/devtools_ui_bg.wasm', '/style.css', '/vendor/xterm.js', '/vendor/addon-fit.js', '/vendor/xterm.css']:
             with urllib.request.urlopen(self.origin + path) as response:
                 self.assertEqual(response.status, 200)
                 self.assertGreater(len(response.read()), 50)
@@ -70,6 +70,16 @@ class DemoTests(unittest.TestCase):
         self.assertEqual(meta['version'], 'devtool 0.5.0')
         self.assertEqual(meta['schema']['version'], '0.5.0')
         self.assertEqual(len(meta['binary_sha256']), 64)
+
+    def test_wasm_module_and_manifest_are_served_with_matching_identity(self):
+        manifest = self.request('/wasm/manifest.json')
+        import hashlib
+        with urllib.request.urlopen(self.origin + '/wasm/devtools_ui_bg.wasm') as response:
+            self.assertEqual(response.headers.get_content_type(), 'application/wasm')
+            module = response.read()
+        self.assertTrue(module.startswith(b'\0asm\x01\0\0\0'))
+        self.assertEqual(hashlib.sha256(module).hexdigest(), manifest['files']['devtools_ui_bg.wasm']['sha256'])
+        self.assertEqual(manifest['target'], 'wasm32-unknown-unknown')
 
     def test_pty_shell_directory_and_native_template(self):
         session = self.new_session()

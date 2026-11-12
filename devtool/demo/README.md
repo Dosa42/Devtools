@@ -1,8 +1,8 @@
-# Devtool terminaldemo
+# Devtools Rust/WASM-werkplaats
 
 Open http://127.0.0.1:8765 op deze telefoon. De server draait lokaal; alle browserassets zijn meegeleverd.
 
-De HTML-interface gebruikt een echte Bash-PTY. De sessiestarter in `server.py` en `session_runtime.py` stelt vier afzonderlijke executables uit `../dist/` beschikbaar: `devtool`, `devtool-auto`, `devtool-proof` en `devtools-watch`. Elke sessie heeft een eigen werkmap, configuratie en teller onder `workspaces/<sessie>/`. De huidige Rust-functies worden rechtstreeks uitgevoerd.
+De interface wordt uit Rust gecompileerd naar WebAssembly en gebruikt een echte Bash-PTY. De Rust-broncode staat in `../ui/src/`; `app.js` laadt de module en `terminal.js` koppelt xterm aan WASM. De sessiestarter in `server.py` en `session_runtime.py` stelt vier afzonderlijke executables uit `../dist/` beschikbaar: `devtool`, `devtool-auto`, `devtool-proof` en `devtools-watch`. Elke sessie heeft een eigen werkmap, configuratie en teller onder `workspaces/<sessie>/`. De huidige Rust-functies worden rechtstreeks uitgevoerd.
 
 De starter start eerst Watch en bevestigt het actieve proces via zijn CLI. Daarna opent hij de Unix98 PTY en start Bash. Watch draait los van de controlling terminal; foreground commands en Ctrl C in Bash stoppen Watch niet. Watch gebruikt de configuratie van de sessie. Voor een nieuwe sessie is de werkmap de standaard zoekmap; een bestaande Watch-configuratie blijft van toepassing. `runtime/session.json` registreert het Watch-PID, Bash-PID en de startvolgorde; `/api/state` toont dezelfde gegevens onder `session_runtime`.
 
@@ -35,3 +35,11 @@ npm test
 ```
 
 `tests/browser_check.py` is een afzonderlijke controle via de CDP-verbinding op poort 9224 van de geopende demo in Chrome. Hiervoor is Python `websockets` nodig. De controle maakt een eigen demosessie, voert de CLI-functies uit en bewaart screenshots en resultaten in `../evidence/`.
+
+De Rust/WASM-build uitvoeren vanuit de repository:
+
+```sh
+python devtool/ui/build.py
+```
+
+De actuele browsertest is `python devtool/ui/tests/browser.py --url http://127.0.0.1:8765 --evidence devtool/evidence`. Deze gebruikt een geopende localhostpagina via CDP op poort 9224. De oudere demoscripts blijven als historische controles beschikbaar.

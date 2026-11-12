@@ -87,6 +87,11 @@ class DistributionTests(unittest.TestCase):
                 (path / 'fixture.tar.gz').write_bytes(b'fixture')
                 (path / 'manifest.json').write_text(json.dumps({'platform': platform, 'source_commit': revision, 'target': BUILD.TARGETS[platform][0], 'versions': {'devtool': '0.5.0'}, 'archive': 'fixture.tar.gz'}))
                 BUILD.checksums(path)
+            browser = incoming / 'wasm-ui-assets'
+            browser.mkdir()
+            (browser / 'devtools-wasm-ui.tar.gz').write_bytes(b'wasm-fixture')
+            (browser / 'manifest.json').write_text(json.dumps({'source_commit': revision, 'archive': 'devtools-wasm-ui.tar.gz'}))
+            BUILD.checksums(browser)
             with patch.object(PUBLISH, 'ROOT', checkout), patch.dict(os.environ, {'DEVTOOLS_ARTIFACTS': str(incoming), 'DEVTOOLS_SOURCE_SHA': revision}), contextlib.redirect_stdout(io.StringIO()):
                 PUBLISH.main()
                 published = git('rev-parse', 'HEAD')
@@ -96,6 +101,12 @@ class DistributionTests(unittest.TestCase):
                 self.assertEqual(git('rev-parse', 'HEAD'), published)
             index = json.loads((checkout / 'all-dist/index.json').read_text())
             self.assertEqual(len(index['platforms']), 4)
+            self.assertEqual(index['wasm_ui']['target'], 'wasm32-unknown-unknown')
+            self.assertEqual((checkout / 'all-dist/wasm-ui/devtools-wasm-ui.tar.gz').read_bytes(), b'wasm-fixture')
+            (browser / 'devtools-wasm-ui.tar.gz').write_bytes(b'changed')
+            with patch.object(PUBLISH, 'ROOT', checkout), patch.dict(os.environ, {'DEVTOOLS_ARTIFACTS': str(incoming), 'DEVTOOLS_SOURCE_SHA': revision}):
+                with self.assertRaisesRegex(RuntimeError, 'WASM UI checksum mismatch'):
+                    PUBLISH.main()
             self.assertEqual((checkout / 'all-dist/README.md').read_text(), 'fixture')
             self.assertEqual(git('status', '--porcelain'), '')
 

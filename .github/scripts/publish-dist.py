@@ -35,7 +35,21 @@ def main():
             shutil.rmtree(target)
         shutil.copytree(source, target)
         records.append({'platform': platform, 'target': record['target'], 'source_commit': revision, 'versions': record['versions'], 'archive': f'{platform}/{record["archive"]}'})
-    (destination / 'index.json').write_text(json.dumps({'schema': 'devtools.platform-index/1', 'source_commit': revision, 'platforms': records}, indent=2) + '\n')
+    browser = incoming / 'wasm-ui-assets'
+    browser_record = None
+    if browser.is_dir():
+        browser_record = json.loads((browser / 'manifest.json').read_text())
+        if browser_record['source_commit'] != revision:
+            raise RuntimeError('WASM UI does not match the source build')
+        for line in (browser / 'SHA256SUMS').read_text().splitlines():
+            expected, relative = line.split('  ', 1)
+            if hashlib.sha256((browser / relative).read_bytes()).hexdigest() != expected:
+                raise RuntimeError(f'WASM UI checksum mismatch: {relative}')
+        target = destination / 'wasm-ui'
+        if target.exists():
+            shutil.rmtree(target)
+        shutil.copytree(browser, target)
+    (destination / 'index.json').write_text(json.dumps({'schema': 'devtools.platform-index/1', 'source_commit': revision, 'platforms': records, 'wasm_ui': {'archive': 'wasm-ui/' + browser_record['archive'], 'target': 'wasm32-unknown-unknown'} if browser_record else None}, indent=2) + '\n')
     git('config', 'user.name', 'github-actions[bot]')
     git('config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com')
     git('add', 'all-dist')
