@@ -1,0 +1,54 @@
+{
+  "schema": "devtools.platform-index/1",
+  "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+  "platforms": [
+    {
+      "platform": "ubuntu-24.04-x86_64",
+      "target": "x86_64-unknown-linux-gnu",
+      "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+      "versions": {
+        "devtool": "0.5.0",
+        "devtool-auto": "0.2.0",
+        "devtool-proof": "0.2.0",
+        "devtools-watch": "0.1.0"
+      },
+      "archive": "ubuntu-24.04-x86_64/devtools-ubuntu-24.04-x86_64.tar.gz"
+    },
+    {
+      "platform": "ubuntu-24.04-arm64",
+      "target": "aarch64-unknown-linux-gnu",
+      "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+      "versions": {
+        "devtool": "0.5.0",
+        "devtool-auto": "0.2.0",
+        "devtool-proof": "0.2.0",
+        "devtools-watch": "0.1.0"
+      },
+      "archive": "ubuntu-24.04-arm64/devtools-ubuntu-24.04-arm64.tar.gz"
+    },
+    {
+      "platform": "macos-15-x86_64",
+      "target": "x86_64-apple-darwin",
+      "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+      "versions": {
+        "devtool": "0.5.0",
+        "devtool-auto": "0.2.0",
+        "devtool-proof": "0.2.0",
+        "devtools-watch": "0.1.0"
+      },
+      "archive": "macos-15-x86_64/devtools-macos-15-x86_64.tar.gz"
+    },
+    {
+      "platform": "macos-15-arm64",
+      "target": "aarch64-apple-darwin",
+      "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+      "versions": {
+        "devtool": "0.5.0",
+        "devtool-auto": "0.2.0",
+        "devtool-proof": "0.2.0",
+        "devtools-watch": "0.1.0"
+      },
+      "archive": "macos-15-arm64/devtools-macos-15-arm64.tar.gz"
+    }
+  ]
+}

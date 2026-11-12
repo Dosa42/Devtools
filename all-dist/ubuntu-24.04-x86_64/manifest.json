@@ -1,0 +1,38 @@
+{
+  "schema": "devtools.bundle/1",
+  "platform": "ubuntu-24.04-x86_64",
+  "target": "x86_64-unknown-linux-gnu",
+  "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "versions": {
+    "devtool": "0.5.0",
+    "devtool-auto": "0.2.0",
+    "devtool-proof": "0.2.0",
+    "devtools-watch": "0.1.0"
+  },
+  "executables": {
+    "devtool": {
+      "format": "ELF",
+      "architecture": "x86_64",
+      "sha256": "82b4cd247b4b609c7eb70c20eb9342246d4c4d2e5d57c8762e1234cb49a30c6f"
+    },
+    "devtool-auto": {
+      "format": "ELF",
+      "architecture": "x86_64",
+      "sha256": "ac5f47cc4ea4b2655070fd07a51f634a065551b97b301d8e1fc46570aa1bea5f"
+    },
+    "devtool-proof": {
+      "format": "ELF",
+      "architecture": "x86_64",
+      "sha256": "0a3826b6b6bab37f074ad3ba56bdb6e7ffb7950e4875765b0a64360004fea228"
+    },
+    "devtools-watch": {
+      "format": "ELF",
+      "architecture": "x86_64",
+      "sha256": "ae78614612db7cb0388b4c97608d8bca59faffc5a143fa40d4ab581a132d6ffa"
+    }
+  },
+  "archive": "devtools-ubuntu-24.04-x86_64.tar.gz",
+  "archive_sha256": "515ec285877d94a3b9b0f5c4c12be86536e811a83e1670840a1318af8a40a026",
+  "tests": "native Rust integration suites and packaged demo integration suite passed"
+}

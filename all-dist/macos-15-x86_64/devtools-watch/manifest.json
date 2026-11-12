@@ -1,0 +1,14 @@
+{
+  "schema": "devtools.distribution/1",
+  "platform": "macos-15-x86_64",
+  "target": "x86_64-apple-darwin",
+  "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "executable": "devtools-watch",
+  "version": "0.1.0",
+  "format": "Mach-O",
+  "architecture": "x86_64",
+  "sha256": "e517effee6c903ac15bae090e2318b3808d49d0ea4e1a3c2ebb4a908a4681e28",
+  "archive": "devtools-watch-macos-15-x86_64.tar.gz",
+  "archive_sha256": "2d0454dd6bf86652bf6c361024d8a8ede71af6822ee80bf34e72b35aa25cf60f"
+}

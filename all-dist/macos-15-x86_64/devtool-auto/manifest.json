@@ -1,0 +1,14 @@
+{
+  "schema": "devtools.distribution/1",
+  "platform": "macos-15-x86_64",
+  "target": "x86_64-apple-darwin",
+  "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "executable": "devtool-auto",
+  "version": "0.2.0",
+  "format": "Mach-O",
+  "architecture": "x86_64",
+  "sha256": "0b368a7d9abbb85bf1209d6715f755e8ff861aac99915776739c55dafa7f48e1",
+  "archive": "devtool-auto-macos-15-x86_64.tar.gz",
+  "archive_sha256": "1ac46d22f5b17482531dde3afabaf63052586e15adf5efa02f8c262aaed8175c"
+}

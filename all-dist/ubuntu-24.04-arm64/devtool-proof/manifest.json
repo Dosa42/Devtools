@@ -1,0 +1,14 @@
+{
+  "schema": "devtools.distribution/1",
+  "platform": "ubuntu-24.04-arm64",
+  "target": "aarch64-unknown-linux-gnu",
+  "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "executable": "devtool-proof",
+  "version": "0.2.0",
+  "format": "ELF",
+  "architecture": "aarch64",
+  "sha256": "76ff9973d877f5a8832aa13621298d1801b3166eb21d6445e0fcb75715fb90e6",
+  "archive": "devtool-proof-ubuntu-24.04-arm64.tar.gz",
+  "archive_sha256": "03010fc8a6f74c5f369117285b342800d122c83cb1d48dcffb9569b42310e871"
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "devtools.bundle/1",
+  "platform": "macos-15-x86_64",
+  "target": "x86_64-apple-darwin",
+  "source_commit": "ef0fcfcfdff18d3998c87243f3e1929e675ba53d",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "versions": {
+    "devtool": "0.5.0",
+    "devtool-auto": "0.2.0",
+    "devtool-proof": "0.2.0",
+    "devtools-watch": "0.1.0"
+  },
+  "executables": {
+    "devtool": {
+      "format": "Mach-O",
+      "architecture": "x86_64",
+      "sha256": "41971b4c16269f73b66c6d45aba10c03cdb66b55ead39a30cd54205fef6237f2"
+    },
+    "devtool-auto": {
+      "format": "Mach-O",
+      "architecture": "x86_64",
+      "sha256": "0b368a7d9abbb85bf1209d6715f755e8ff861aac99915776739c55dafa7f48e1"
+    },
+    "devtool-proof": {
+      "format": "Mach-O",
+      "architecture": "x86_64",
+      "sha256": "6463aa6ec7cc9b625291bb498167f5e8f36ac8712d365a2c0df352d6148231fd"
+    },
+    "devtools-watch": {
+      "format": "Mach-O",
+      "architecture": "x86_64",
+      "sha256": "e517effee6c903ac15bae090e2318b3808d49d0ea4e1a3c2ebb4a908a4681e28"
+    }
+  },
+  "archive": "devtools-macos-15-x86_64.tar.gz",
+  "archive_sha256": "23bfeef0ad66291443e942a52fe24527127366c833a5c9e09129d5cd89ece5cc",
+  "tests": "native Rust integration suites and packaged demo integration suite passed"
+}
