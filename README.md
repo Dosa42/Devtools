@@ -68,9 +68,17 @@ De rechterkant toont:
 
 `Telemetrie` en `Bestanden` wisselen tussen het meekijkpaneel en de bestandsboom met voorbeelden. `Paneel` klapt de zijbalk in of uit. Onder 761 CSS-pixels staat het paneel onder de terminal.
 
-Bash-events registreren interactieve commandregels; menu-antwoorden blijven invoer van het actieve programma. `/proc` wordt elke 150 ms bemonsterd en de frontend haalt elke 350 ms nieuwe telemetrie op. Een kort proces kan tussen metingen vallen; zijn interactieve Bash-command blijft in de tijdlijn staan. Het API-overzicht bewaart de laatste 100 commandregels en de frontend toont de nieuwste 30. De exitcode is die van de gehele commandregel volgens de gewone Bash-regels.
+Bash-events registreren interactieve commandregels; menu-antwoorden blijven invoer van het actieve programma. De processtatus wordt elke 150 ms bemonsterd en de frontend haalt elke 350 ms nieuwe telemetrie op. Een kort proces kan tussen metingen vallen; zijn interactieve Bash-command blijft in de tijdlijn staan. Het API-overzicht bewaart de laatste 100 commandregels en de frontend toont de nieuwste 30. De exitcode is die van de gehele commandregel volgens de gewone Bash-regels.
 
 ## Zelf bouwen
+
+### Automatische Linux- en macOS-builds
+
+[Build all Devtools platforms](.github/workflows/build-cli.yml) bouwt en test de vier CLI’s voor Linux x86_64, Linux ARM64, macOS Intel en macOS Apple Silicon. Na een geslaagde run op main worden de complete bundels en afzonderlijke projectpakketten onder [`all-dist/`](all-dist/README.md) opgeslagen, met broncommit, Rust-target, executableformaat en SHA-256. Iedere run biedt ook een downloadbaar artifact per platform. Via Actions → Build all Devtools platforms → Run workflow start je handmatig een nieuwe build.
+
+De workflow gebruikt native runners voor elk target, zodat de executables en de meegeleverde demo ook daadwerkelijk worden uitgevoerd. macOS gebruikt Mach-O, Linux gebruikt ELF. Watch gebruikt op macOS libproc voor procesidentiteit; de telemetrie gebruikt daar ps. Op Linux/Android blijft de procesbron `/proc`. De standaard macOS-Bash wordt ondersteund; bij Bash zonder `EPOCHREALTIME` hebben eventtijdstempels een resolutie van één seconde.
+
+### Lokaal bouwen
 
 De vier projecten blijven afzonderlijk bouwbaar. Gebruik Rust/Cargo en een toolchain die de vastgelegde dependencies in de `Cargo.lock`-bestanden ondersteunt.
 
@@ -93,7 +101,7 @@ cp devtool-proof/dist/devtool-proof devtool/dist/devtool-proof
 cp devtools-watch/dist/devtools-watch devtool/dist/devtools-watch
 ```
 
-De meegeleverde `SHA256SUMS` beschrijven de gepubliceerde distributiebestanden. Een eigen build krijgt eigen binarybytes en dus eigen hashes. Watch en de demo gebruiken Unix-procesbeheer en `/proc` op Linux/Android.
+De meegeleverde `SHA256SUMS` beschrijven de gepubliceerde distributiebestanden. Een eigen build krijgt eigen binarybytes en dus eigen hashes. Watch en de demo gebruiken Unix-procesbeheer, met `/proc` op Linux/Android en macOS-procesinformatie via libproc en ps.
 
 ## 1. Hoofdmap en canonical tree
 
@@ -236,4 +244,4 @@ npm test
 
 De Rust-tests voeren de echte CLI’s uit. De demo-integratietests controleren de PTY, canonical files, archieven, interactieve configuratie, Watch-startvolgorde en telemetrie. Voor de onafhankelijke cryptografische testcontroles zijn `sha256sum`, `sha512sum` en OpenSSL nodig. De aanvullende browsertest gebruikt een geopende demo via CDP en Python `websockets`; zie de [demo-handleiding](devtool/demo/README.md).
 
-Deze gepubliceerde versie is gecontroleerd met **69 Rust-integratietests en 11 demo-integratietests** op Android/Termux ARM64; alle 80 controles slagen.
+Deze gepubliceerde versie is gecontroleerd met **69 Rust-integratietests en 13 demo-integratietests** op Android/Termux ARM64; alle 82 controles slagen.

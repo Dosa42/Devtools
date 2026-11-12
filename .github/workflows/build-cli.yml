@@ -1,0 +1,124 @@
+name: Build all Devtools platforms
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-cli.yml
+      - .github/scripts/**
+      - devtool/**
+      - devtool-auto/**
+      - devtool-proof/**
+      - devtools-watch/**
+  pull_request:
+    paths:
+      - .github/workflows/build-cli.yml
+      - .github/scripts/**
+      - devtool/**
+      - devtool-auto/**
+      - devtool-proof/**
+      - devtools-watch/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: devtools-platforms-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and test ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu-24.04-x86_64
+            runner: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - platform: ubuntu-24.04-arm64
+            runner: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+          - platform: macos-15-x86_64
+            runner: macos-15-intel
+            target: x86_64-apple-darwin
+          - platform: macos-15-arm64
+            runner: macos-15
+            target: aarch64-apple-darwin
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    env:
+      CARGO_BUILD_JOBS: '2'
+      CARGO_INCREMENTAL: '0'
+      DEVTOOLS_PLATFORM: ${{ matrix.platform }}
+      DEVTOOLS_TARGET: ${{ matrix.target }}
+      DEVTOOLS_OUTPUT: ${{ runner.temp }}/devtools-output
+      CARGO_TARGET_DIR: ${{ github.workspace }}/.build/${{ matrix.target }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+
+      - name: Install Linux test tools
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y build-essential coreutils openssl
+
+      - name: Install macOS test tools
+        if: runner.os == 'macOS'
+        run: |
+          brew install coreutils openssl@3
+          printf '%s\n' "$(brew --prefix coreutils)/libexec/gnubin" "$(brew --prefix openssl@3)/bin" >> "$GITHUB_PATH"
+
+      - name: Set up Rust target
+        run: |
+          rustup toolchain install stable --profile minimal --component rustfmt
+          rustup default stable
+          rustup target add "$DEVTOOLS_TARGET"
+
+      - name: Build, execute tests and assemble distributions
+        run: |
+          python -m unittest discover -s .github/scripts -p 'test_*.py' -v
+          python .github/scripts/build-cli.py
+
+      - name: Upload platform archives and manifests
+        uses: actions/upload-artifact@v7
+        with:
+          name: devtools-${{ matrix.platform }}
+          path: ${{ env.DEVTOOLS_OUTPUT }}/${{ matrix.platform }}/
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Publish all-dist to the repository
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Check out destination branch
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Download all platform outputs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: devtools-*
+          path: ${{ runner.temp }}/devtools-artifacts
+
+      - name: Save archives, manifests and checksum files
+        env:
+          DEVTOOLS_ARTIFACTS: ${{ runner.temp }}/devtools-artifacts
+          DEVTOOLS_SOURCE_SHA: ${{ github.sha }}
+        run: python3 .github/scripts/publish-dist.py

@@ -141,6 +141,7 @@
     const label = stale ? 'Verouderd' : data.coverage !== 'complete' ? 'Beperkte meting' : data.shell_alive ? 'Live' : 'Afgesloten';
     if (status.textContent !== label) status.textContent = label;
     element('telemetry-updated').textContent = data.sampled_at ? clock(data.sampled_at) : 'Nog geen meting';
+    element('telemetry-source-label').textContent = data.sources.includes('ps') ? 'Bash-events + macOS ps' : 'Bash-events + /proc';
     const signature = JSON.stringify([data.processes, data.commands, data.executables, data.shell_ready, data.shell_alive, data.watch_running]);
     if (signature === telemetrySignature) return;
     telemetrySignature = signature;

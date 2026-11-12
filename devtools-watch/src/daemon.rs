@@ -21,6 +21,7 @@ pub struct Process {
     pub start_ticks: u64,
 }
 
+#[cfg(any(target_os = "linux", target_os = "android"))]
 fn identity(pid: u32) -> Option<u64> {
     let text = fs::read_to_string(format!("/proc/{pid}/stat")).ok()?;
     let (_, fields) = text.rsplit_once(") ")?;
@@ -29,6 +30,43 @@ fn identity(pid: u32) -> Option<u64> {
         return None;
     }
     fields.get(19)?.parse().ok()
+}
+
+#[cfg(target_os = "macos")]
+#[link(name = "proc")]
+unsafe extern "C" {
+    fn proc_pidinfo(
+        pid: libc::c_int,
+        flavor: libc::c_int,
+        arg: u64,
+        buffer: *mut libc::c_void,
+        size: libc::c_int,
+    ) -> libc::c_int;
+}
+
+#[cfg(target_os = "macos")]
+fn identity(pid: u32) -> Option<u64> {
+    let mut info = std::mem::MaybeUninit::<libc::proc_bsdinfo>::zeroed();
+    let size = std::mem::size_of::<libc::proc_bsdinfo>() as libc::c_int;
+    let read = unsafe {
+        proc_pidinfo(
+            pid as libc::c_int,
+            libc::PROC_PIDTBSDINFO,
+            0,
+            info.as_mut_ptr().cast(),
+            size,
+        )
+    };
+    if read != size {
+        return None;
+    }
+    let info = unsafe { info.assume_init() };
+    if info.pbi_status == libc::SZOMB {
+        return None;
+    }
+    info.pbi_start_tvsec
+        .checked_mul(1_000_000)?
+        .checked_add(info.pbi_start_tvusec)
 }
 
 pub fn running(paths: &Paths) -> Option<Process> {

@@ -2,8 +2,26 @@ import json
 import os
 from pathlib import Path
 import shlex
+import subprocess
+import sys
 import threading
 import time
+
+
+def darwin_processes(text):
+    result = {}
+    for line in text.splitlines():
+        values = line.split(None, 8)
+        if len(values) != 9:
+            continue
+        try:
+            pid, ppid, group, foreground = map(int, values[:4])
+            if values[5].startswith('Z'):
+                continue
+            result[pid] = {'pid': pid, 'ppid': ppid, 'group': group, 'tty': 0 if values[4] in ['??', '?', '-'] else 1, 'foreground_group': foreground, 'state': values[5][0], 'nice': int(values[6]), 'rss_bytes': int(values[7]) * 1024, 'name': Path(values[8]).name, 'arguments': [values[8]], 'executable': values[8]}
+        except ValueError:
+            continue
+    return result
 
 
 class Telemetry:
@@ -19,6 +37,8 @@ class Telemetry:
         self.last_sample = None
         self.last_observed = {}
         self.coverage = 'complete'
+        self.source = 'ps' if sys.platform == 'darwin' else 'proc'
+        self.darwin = {}
         self.thread = threading.Thread(target=self.run, daemon=True)
         self.thread.start()
 
@@ -63,6 +83,15 @@ class Telemetry:
                 command['exit_code'] = int(value)
 
     def process(self, pid, layer):
+        if self.source == 'ps':
+            value = self.darwin.get(pid)
+            if value is None:
+                return None
+            value = dict(value, layer=layer)
+            result = subprocess.run(['ps', '-ww', '-p', str(pid), '-o', 'command='], capture_output=True, text=True, timeout=2)
+            if result.returncode == 0:
+                value['arguments'] = [result.stdout.strip()]
+            return value
         proc = Path('/proc') / str(pid)
         try:
             stat = (proc / 'stat').read_text()
@@ -94,14 +123,20 @@ class Telemetry:
         seen = set()
         processes = []
         children = {}
-        for proc in Path('/proc').iterdir():
-            if not proc.name.isdecimal():
-                continue
-            try:
-                values = (proc / 'stat').read_text().rsplit(') ', 1)[1].split()
-                children.setdefault(int(values[1]), []).append(int(proc.name))
-            except (OSError, ValueError, IndexError):
-                continue
+        if self.source == 'ps':
+            output = subprocess.run(['ps', '-axo', 'pid=,ppid=,pgid=,tpgid=,tty=,stat=,ni=,rss=,comm='], capture_output=True, text=True, timeout=2, check=True)
+            self.darwin = darwin_processes(output.stdout)
+            for value in self.darwin.values():
+                children.setdefault(value['ppid'], []).append(value['pid'])
+        else:
+            for proc in Path('/proc').iterdir():
+                if not proc.name.isdecimal():
+                    continue
+                try:
+                    values = (proc / 'stat').read_text().rsplit(') ', 1)[1].split()
+                    children.setdefault(int(values[1]), []).append(int(proc.name))
+                except (OSError, ValueError, IndexError):
+                    continue
         while queue:
             pid, layer = queue.pop(0)
             if pid in seen:
@@ -147,7 +182,7 @@ class Telemetry:
                 last = next((c for c in rows if name in c['executables']), None)
                 used = max(last['started'] if last else 0, self.last_observed.get(name, 0)) or None
                 executables.append({'name': name, 'path': path, 'active': name in active, 'pids': [p['pid'] for p in self.processes if p['name'] == name], 'last_command': last['command'] if last else None, 'last_used': used})
-            return {'sampled_at': self.last_sample, 'sample_interval_ms': 150, 'coverage': self.coverage, 'processes': list(self.processes), 'commands': rows, 'executables': executables, 'shell_pid': self.session.pid, 'shell_ready': self.session.ready, 'shell_alive': self.session.alive, 'watch_running': any(p['layer'] == 'watch' and p['name'] == 'devtools-watch' for p in self.processes), 'sources': ['bash-debug-prompt', 'proc'], 'history_limit': 100}
+            return {'sampled_at': self.last_sample, 'sample_interval_ms': 150, 'coverage': self.coverage, 'processes': list(self.processes), 'commands': rows, 'executables': executables, 'shell_pid': self.session.pid, 'shell_ready': self.session.ready, 'shell_alive': self.session.alive, 'watch_running': any(p['layer'] == 'watch' and p['name'] == 'devtools-watch' for p in self.processes), 'sources': ['bash-debug-prompt', self.source], 'history_limit': 100}
 
     def close(self):
         self.stopping.set()

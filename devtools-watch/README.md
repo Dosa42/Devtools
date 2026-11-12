@@ -115,6 +115,6 @@ cargo test --release --locked
 cargo clippy --all-targets --locked -- -D warnings
 ```
 
-De monitor is een zelfstandig ELF-programma. Voor de bewijscontroles gebruikt hij de apart geïnstalleerde devtool-proof. De integratietests gebruiken die echte executable, standaard via PATH. DEVTOOLS_WATCH_TEST_PROOF kan voor tests een expliciet executablepad aanwijzen. Het programma zelf ondersteunt Linux/Android-procesbeheer via /proc en Unix-signalen. De meegeleverde binary is voor Android/Termux ARM64 gebouwd.
+De monitor is een zelfstandig ELF-programma. Voor de bewijscontroles gebruikt hij de apart geïnstalleerde devtool-proof. De integratietests gebruiken die echte executable, standaard via PATH. DEVTOOLS_WATCH_TEST_PROOF kan voor tests een expliciet executablepad aanwijzen. Het programma ondersteunt Linux/Android-procesbeheer via /proc en macOS-procesbeheer via libproc, met Unix-signalen op beide platforms. De meegeleverde binary is voor Android/Termux ARM64 gebouwd.
 
 Schema's staan onder schemas/. Het state-schema beschrijft de getypeerde sleutel/waarderepresentatie van state.txt. Runtimegegevens en gegenereerde templates bevatten machinegegevens.
