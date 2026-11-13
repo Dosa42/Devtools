@@ -7,3 +7,6 @@
 **/evidence/
 /demo-workspace/
 /.build/
+
+/android-app/build/
+/android-app/dist/

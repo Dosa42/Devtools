@@ -1,0 +1,13 @@
+{
+  "schema": "devtools.android-import/1",
+  "state": "pending",
+  "source_repository": "Dosa42/Ayrvokan_widgets",
+  "source_commit": "838779663991b999174a1245f2a0585f6fa1f19c",
+  "source_tree": "d8654cd13a80b962099833340004db5f03e90be4",
+  "excluded": [
+    "build/",
+    ".github/workflows/build.yml"
+  ],
+  "files": 3449,
+  "content_sha256": "45a53b3b8bbfb03c4e8c3a859b1d140ed3403e6c20bc4d26f030d67a5dc2f735"
+}

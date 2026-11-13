@@ -1,0 +1,141 @@
+name: Build Devtools Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - android-app/**
+      - tools/import-android-app.py
+      - .github/workflows/build-android.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: devtools-android-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  android:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: android-app
+    env:
+      APKTOOL_VERSION: '3.0.3'
+      APKTOOL_SHA256: dbf930b076c6b9be08d57c449cacefc3bdd6b71ebd59b3066fc0e1f5b14f9423
+      DEX_TOOLS_SHA256: ee7c45eb3c1d2474a6145d8d447e651a736a22d9664b6d3d3be5a5a817dda23a
+      ANDROID_BUILD_TOOLS: '35.0.0'
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Complete the one-time app source import
+        working-directory: .
+        run: |
+          python3 tools/import-android-app.py
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Import complete Devtools Android runtime snapshot [skip ci]'
+            git push origin HEAD:main
+          fi
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install Android build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y busybox unzip build-essential
+          mkdir -p "$RUNNER_TEMP/apktool" "$RUNNER_TEMP/dex-tools"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/apktool/apktool.jar" "https://github.com/iBotPeaches/Apktool/releases/download/v${APKTOOL_VERSION}/apktool_${APKTOOL_VERSION}.jar"
+          printf '%s  %s\n' "$APKTOOL_SHA256" "$RUNNER_TEMP/apktool/apktool.jar" | sha256sum --check --strict
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/dex-tools.zip" 'https://github.com/pxb1988/dex2jar/releases/download/v2.4/dex-tools-v2.4.zip'
+          printf '%s  %s\n' "$DEX_TOOLS_SHA256" "$RUNNER_TEMP/dex-tools.zip" | sha256sum --check --strict
+          unzip -q "$RUNNER_TEMP/dex-tools.zip" -d "$RUNNER_TEMP/dex-tools"
+          chmod +x "$RUNNER_TEMP/dex-tools/dex-tools-v2.4/"*.sh
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;${ANDROID_BUILD_TOOLS}" 'platforms;android-35' 'ndk;27.2.12479018'
+          printf '%s\n' "$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS" >> "$GITHUB_PATH"
+          printf 'D2J_BAKSMALI=%s\n' "$RUNNER_TEMP/dex-tools/dex-tools-v2.4/d2j-baksmali.sh" >> "$GITHUB_ENV"
+          printf 'ANDROID_NDK_HOME=%s\n' "$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+
+      - name: Rebuild native PTY and Java runtime
+        run: |
+          python3 tools/build-pty.py
+          python3 tools/build-server-java.py
+          python3 .github/scripts/vendor-ubuntu.py
+
+      - name: Test and verify the packaged runtime
+        run: |
+          python3 -m venv "$RUNNER_TEMP/runtime-tests"
+          "$RUNNER_TEMP/runtime-tests/bin/pip" install websockets==15.0.1
+          python3 .github/scripts/test-pty.py
+          "$RUNNER_TEMP/runtime-tests/bin/python" .github/scripts/test-terminal.py
+          "$RUNNER_TEMP/runtime-tests/bin/python" .github/scripts/test-files.py
+          python3 .github/scripts/test-engine.py
+          python3 .github/scripts/test-ubuntu.py
+          python3 .github/scripts/test-ssh.py
+          python3 .github/scripts/verify-runtime.py
+          python3 .github/scripts/verify-assets.py
+          python3 .github/scripts/verify-ssh.py
+          python3 .github/scripts/verify-ubuntu.py
+
+      - name: Build Devtools APK
+        run: |
+          mkdir -p dist
+          java -jar "$RUNNER_TEMP/apktool/apktool.jar" build . --force --output dist/devtools-unsigned.apk
+          python3 .github/scripts/verify-runtime.py dist/devtools-unsigned.apk
+          python3 .github/scripts/verify-assets.py dist/devtools-unsigned.apk
+          python3 .github/scripts/verify-ssh.py dist/devtools-unsigned.apk
+          python3 .github/scripts/verify-ubuntu.py dist/devtools-unsigned.apk
+
+      - name: Configure signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          CONFIGURED_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          CONFIGURED_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          CONFIGURED_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/signing"
+          keystore="$RUNNER_TEMP/signing/devtools.jks"
+          store_password="${CONFIGURED_STORE_PASSWORD:-android}"
+          key_password="${CONFIGURED_KEY_PASSWORD:-$store_password}"
+          key_alias="${CONFIGURED_KEY_ALIAS:-devtools-test}"
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$keystore"
+          else
+            keytool -genkeypair -keystore "$keystore" -storetype JKS -storepass "$store_password" -keypass "$key_password" -alias "$key_alias" -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=Devtools,OU=Development,O=Dosa42,L=Brussels,C=BE'
+          fi
+          printf 'APK_KEYSTORE=%s\n' "$keystore" >> "$GITHUB_ENV"
+          printf 'APK_STORE_PASSWORD=%s\n' "$store_password" >> "$GITHUB_ENV"
+          printf 'APK_KEY_PASSWORD=%s\n' "$key_password" >> "$GITHUB_ENV"
+          printf 'APK_KEY_ALIAS=%s\n' "$key_alias" >> "$GITHUB_ENV"
+
+      - name: Align and sign Devtools APK
+        run: |
+          build_tools="$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS"
+          "$build_tools/zipalign" -f -P 16 4 dist/devtools-unsigned.apk dist/devtools-aligned.apk
+          "$build_tools/apksigner" sign --ks "$APK_KEYSTORE" --ks-pass "pass:$APK_STORE_PASSWORD" --ks-key-alias "$APK_KEY_ALIAS" --key-pass "pass:$APK_KEY_PASSWORD" --out dist/devtools-arm64-v8a.apk dist/devtools-aligned.apk
+          "$build_tools/apksigner" verify --verbose dist/devtools-arm64-v8a.apk
+          "$build_tools/aapt" dump badging dist/devtools-arm64-v8a.apk > dist/apk-metadata.txt
+          head -4 dist/apk-metadata.txt
+          sha256sum dist/devtools-arm64-v8a.apk | tee dist/devtools-arm64-v8a.apk.sha256
+          cp import.json dist/source-import.json
+          printf '### Devtools Android ARM64\n\n' >> "$GITHUB_STEP_SUMMARY"
+          printf 'Source commit: `%s`\n\n' "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          cat dist/devtools-arm64-v8a.apk.sha256 >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: devtools-android-arm64-v8a-${{ github.run_number }}
+          path: |
+            android-app/dist/devtools-arm64-v8a.apk
+            android-app/dist/devtools-arm64-v8a.apk.sha256
+            android-app/dist/source-import.json
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30

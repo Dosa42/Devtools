@@ -1,5 +1,9 @@
 # Devtools
 
+De Android-app staat nu in [`android-app/`](android-app/README.md), onder de zichtbare naam **Devtools**. Zij bevat Ubuntu Bare, de lokale HTTP/WebSocket-terminal, SSH, Android–Ubuntu-bestandsbeheer en de mechanische achtergrondengine. De telefoon kan daarmee zelf de runtime hosten. De bestaande vier Rust-executables en Rust/WASM-interface blijven in hun eigen projectmappen. Verdere koppeling en het nieuwe UI-ontwerp volgen stap voor stap.
+
+[Build Devtools Android](.github/workflows/build-android.yml) bouwt de ARM64-APK en biedt die als Actions-artifact aan. De appbron wordt hier verder ontwikkeld; de oorspronkelijke `linux-runtime-rework`-repo blijft ongemoeid.
+
 Vier zelfstandige Rust CLI’s voor bestandsstructuren, automatisering, bewijsberekening en een deterministische achtergrondmonitor. De localhostwerkplaats combineert ze met een gecompileerde Rust/WebAssembly-interface, echte Bash-terminal en een live meekijkpaneel.
 
 Iedere executable heeft een eigen Cargo-project, `main.rs`, `lib.rs`, configuratie en tests. De programma’s werken samen via CLI-opdrachten en bestanden. De meegeleverde binaries zijn **Android/Termux ARM64 ELF-executables**. Voor Linux bouw je de programma’s op het bijbehorende platform; ELF alleen maakt een Android-binary niet uitwisselbaar met Linux.
