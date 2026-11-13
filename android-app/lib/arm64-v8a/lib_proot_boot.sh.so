@@ -1,0 +1,68 @@
+#!/NOMone/busybox_static sh
+unset LD_LIBRARY_PATH
+unset LD_PRELOAD
+
+if [ -f /NOMone/UbuntuBase22.04 ]; then
+    export HOME=/root
+    mkdir -p /root /tmp /run
+    cd /root || exit 1
+    /NOMone/startup.sh &
+    exec /NOMone/ProotClient
+fi
+
+export MOZ_FAKE_NO_SANDBOX=1
+export XKL_XMODMAP_DISABLE=1
+export CHROMIUM_FLAGS="--no-sandbox --test-type --disable-low-res-tiling --enable-low-end-device-mode --num-raster-threads=$CORES_COUNT --disable-composited-antialiasing"
+export PATH=$PATH:/usr/games
+
+echo "------------------------------"
+echo "=============================="
+echo "------------------------------"
+echo "Physical memory limit: $PHYSICAL_MEM_LIMIT KBytes"
+echo "Virtual  memory limit: $VIRTUAL_MEM_LIMIT KBytes"
+if [[ "$PHYSICAL_MEM_LIMIT" -gt 0 ]] ; then
+  ulimit -m $PHYSICAL_MEM_LIMIT
+fi
+if [[ "$VIRTUAL_MEM_LIMIT" -gt 0 ]] ; then
+    ulimit -v $VIRTUAL_MEM_LIMIT
+fi
+
+touch ~/.hushlogin
+
+chmod u+s /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+
+rm /run/dbus/system_bus_socket
+rm /run/dbus/pid
+mkdir -p /var/lib/dbus/
+
+if [ ! -f "/NOMone/SystemReady" ]; then
+    /NOMone/prepareDebianImage.sh
+fi
+
+if [ ! -f /NOMone/startup.sh ]; then
+    cp /NOMone/defaultStartup.sh /NOMone/startup.sh
+    chmod +x /NOMone/startup.sh
+fi
+
+if [[ "$IMAGE_NAME" != "Ubuntu22.04Bare" && "$RUN_AS_ROOT" != "1" ]]; then
+    USERNAME="NOM1"
+    if id "$USERNAME" &>/dev/null; then
+        echo "User $USERNAME exists."
+    else
+        echo "User $USERNAME does not exist. Creating it..."
+        useradd -m -s /bin/bash "NOM1"
+        echo "NOM1 ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    fi
+    export HOME=/home/$USERNAME
+    su -c "/NOMone/startup.sh" $USERNAME
+else
+    if [[ "$IMAGE_NAME" == "Ubuntu22.04Bare" ]]; then
+        echo "Old image, running as root..."
+    else
+        echo "Run as root enabled, running as root..."
+    fi
+    /NOMone/startup.sh &
+fi
+
+
+/NOMone/ProotClient
